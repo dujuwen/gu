@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 
 /**
  * GuFixController implements the CRUD actions for GuFix model.
+ * 
+ * http://www.gu.com/gu-fix
+ * 
  */
 class GuFixController extends Controller
 {
