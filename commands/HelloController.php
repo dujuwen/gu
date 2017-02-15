@@ -59,7 +59,7 @@ class HelloController extends Controller
                         if ($model) {
                             continue;
                         }
-    
+
                         $model = new GuFix();
                         $model->code = $code;
                         if (StringHelper::startsWith($idStr, GuFix::TYPE_SH)) {
@@ -77,5 +77,84 @@ class HelloController extends Controller
                 echo $e->getMessage() . PHP_EOL;
             }
         }
+    }
+
+    //获取固定信息
+    public function actionFixInfo()
+    {
+        $all = GuFix::find()->select('type,code')->asArray()->all();
+        $i = 1;
+        foreach ($all as $value) {
+            $type = $value['type'];
+            $code = $value['code'];
+            $model = GuFix::findOne(['code' => $code]);
+            if ($model) {
+                $data = $this->getChangeData($type, $code);
+                if (is_array($data) && count($data)) {
+                    //44是流通的
+                    //45是总的
+                    $model->total = floatval($data[45]) * 100000000; //单位是亿要计算下
+                    $model->circulation = floatval($data[44]) * 100000000; //单位是亿要计算下
+                    $bigRate = floatval($this->getBigPercent($code)) / 100;
+                    $model->hand_rate = $bigRate;
+                    
+                    $hand_num = ceil($model->circulation  * $bigRate);
+                    $hand_num -= $hand_num % 100;
+                    $model->hand_num = $hand_num;
+
+                    $model->left_num = $model->circulation - $model->hand_num;
+                    $re = $model->save();
+                    if ($re) {
+                        echo $code . '更新成功, ' . $i . PHP_EOL;
+                        $i++;
+                    }
+                }
+            }
+        }
+    }
+
+    //获取总共的股本数,包括浮动数
+    private function getChangeData($type, $code) {
+        try {
+            $rand = mt_rand() / mt_getrandmax();
+            $tmp = ($type == 1) ? 'sh' : 'sz';
+            $gu_ben_info = 'http://qt.gtimg.cn/'. $rand .'q=' . $tmp . $code;
+            $data = Util::curl($gu_ben_info);
+            $arrData = explode('~', $data);
+            return $arrData;
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return [];
+    }
+
+    //获取大股东持股比例
+    private function getBigPercent($code) {
+        //股东股份信息
+        try {
+            $gu_don_info = 'http://stock.finance.qq.com/corp1/stk_holder.php?zqdm=' . $code;
+            $data = Util::curl($gu_don_info);
+            $percent_pos = strpos($data, 'class="nobor_l fntB"');
+            $big_percent_str = substr($data, $percent_pos, 500); //所有大股东持有比例
+            preg_match('/([\d\.]*)%/', $big_percent_str , $matches);
+            if (is_array($matches) && count($matches) >= 2) {
+                $big_percent = $matches[1];
+                return $big_percent;
+            }
+        } catch (\Exception $e) {
+            return 0;
+        }
+
+        return 0;
+    }
+
+    //获取动态信息
+    public function actionChangeInfo()
+    {
+        $change_url = 'http://web.sqt.gtimg.cn/q=sh600650?r=0.2256620838672143';
+        'http://qt.gtimg.cn/q=s_sh600650'; //最终成交
+        'http://qt.gtimg.cn/r=0.6789q=sh600650'; //实时数据
+        //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
     }
 }
