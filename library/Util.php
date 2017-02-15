@@ -9,7 +9,7 @@ class Util {
     }
 
     //mehtod 0 get, 1 post , 2 put
-    public static function curl($url, $method = 0, $data='', $headers = [], $userAgent = '', $connectTimeout=3, $timeout=3, $is_throw_exception = false, & $options = null) {
+    public static function curl($url, $method = 0, $data = '', $headers = [], $userAgent = '', $connectTimeout=3, $timeout=3, $is_throw_exception = false, & $options = null) {
         $ch = curl_init($url);
         curl_setopt ($ch, CURLOPT_HEADER, 0);
         curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $connectTimeout);
@@ -62,5 +62,14 @@ class Util {
 
         curl_close ($ch);
         return $ret;
+    }
+
+    //十六进制转字符串
+    public static function hexToStr($hex){
+        $string = '';
+        for($i=0; $i < strlen($hex) - 1; $i += 2) {
+            $string .= chr(hexdec($hex[$i].  $hex[$i+1]));
+        }
+        return $string;
     }
 }

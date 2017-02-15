@@ -88,18 +88,44 @@ class HelloController extends Controller
             $type = $value['type'];
             $code = $value['code'];
             $model = GuFix::findOne(['code' => $code]);
+
             if ($model) {
+                //名称更新的话一周执行一次
+                $name = $this->getCodeName($type, $code);
+                $model->name = $name;
+                $re = $model->save(); //注意保存了两次!!!!!!
+                if ($re) {
+                    echo $code . '更新成功, ' . $i . PHP_EOL;
+                    $i++;
+                }
+
+                //下面是更新总的市值和流通市值
+                continue;
+                var_dump('下面的一天执行一次');die;
+
                 $data = $this->getChangeData($type, $code);
                 if (is_array($data) && count($data)) {
                     //44是流通的
                     //45是总的
-                    $model->total = floatval($data[45]) * 100000000; //单位是亿要计算下
-                    $model->circulation = floatval($data[44]) * 100000000; //单位是亿要计算下
+                    $total = floatval($data[45]) * 100000000;//单位是亿要计算下
+                    if ($total % 100 != 0) {
+                        $total = 100 + $total - ($total % 100);
+                    }
+                    $model->total = $total;
+
+                    $circulation = floatval($data[44]) * 100000000; //单位是亿要计算下
+                    if ($circulation % 100 != 0) {
+                        $circulation = 100 + $circulation - ($circulation % 100);
+                    }
+                    $model->circulation = $circulation;
+
                     $bigRate = floatval($this->getBigPercent($code)) / 100;
                     $model->hand_rate = $bigRate;
-                    
+
                     $hand_num = ceil($model->circulation  * $bigRate);
-                    $hand_num -= $hand_num % 100;
+                    if ($hand_num % 100 != 0) {
+                        $hand_num = 100 + $hand_num - ($hand_num % 100);
+                    }
                     $model->hand_num = $hand_num;
 
                     $model->left_num = $model->circulation - $model->hand_num;
@@ -147,6 +173,24 @@ class HelloController extends Controller
         }
 
         return 0;
+    }
+
+    //获取股票名称
+    private function getCodeName($type, $code) {
+        try {
+            $code = (($type == 1) ? 'sh' : 'sz') . $code;
+            $code_name_url = 'http://qt.gtimg.cn/q=s_' . $code;
+            $data = Util::curl($code_name_url, 0, '', ["charset=UTF-8"]);
+            $data = iconv('GBK', 'utf-8', $data);
+            if ($data) {
+                $arrNames = explode('~', $data);
+                return $arrNames[1];
+            }
+        } catch (\Exception $e) {
+            return '';
+        }
+
+        return '';
     }
 
     //获取动态信息
