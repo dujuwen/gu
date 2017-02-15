@@ -19,7 +19,7 @@ class GuFixSearch extends GuFix
     {
         return [
             [['id', 'type', 'total', 'circulation', 'hand_num', 'left_num'], 'integer'],
-            [['name', 'pingyin'], 'safe'],
+            [['name', 'pingyin', 'code'], 'safe'],
             [['hand_rate'], 'number'],
         ];
     }
