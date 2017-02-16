@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\GuFix;
 use app\models\GuFixSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\library\base\BaseController;
