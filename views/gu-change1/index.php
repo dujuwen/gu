@@ -7,28 +7,26 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\GuChange1Search */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Gu Change1s';
+$this->title = '每日变化';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="gu-change1-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Gu Change1', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('添加', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'code',
-            'yesterday',
-            'today',
-            'max',
+//             'yesterday',
+//             'today',
+//             'max',
             // 'min',
             // 'deal_count',
             // 'deal_num',
@@ -36,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'amplitude',
             // 'current_date',
             // 'current_date_',
-            // 'z_j_c',
+            'z_j_c',
             // 'current',
             // 'rate',
             // 'up_limit',

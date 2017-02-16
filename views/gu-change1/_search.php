@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\GuMonitor;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\GuChange1Search */
@@ -17,13 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'code') ?>
-
-    <?= $form->field($model, 'yesterday') ?>
-
-    <?= $form->field($model, 'today') ?>
-
-    <?= $form->field($model, 'max') ?>
+    <?= $form->field($model, 'code')->dropDownList(GuMonitor::getCodeName(), ['prompt' => '选择']) ?>
 
     <?php // echo $form->field($model, 'min') ?>
 
@@ -60,8 +55,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'created_at') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton('重置', ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

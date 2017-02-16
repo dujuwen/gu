@@ -85,6 +85,8 @@ class GuChange1Search extends GuChange1
 
         $query->andFilterWhere(['like', 'code', $this->code]);
 
+        $query->orderBy('current_date desc');
+
         return $dataProvider;
     }
 }
