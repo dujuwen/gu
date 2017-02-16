@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\GuFix;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\GuChange1Search */
@@ -12,7 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="gu-change1-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -23,7 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'id',
-            'code',
+            [
+                'label' => '股票代码',
+                'value' => function($model) {
+                    return GuFix::getNameByCode($model->code);
+                },
+            ],
 //             'yesterday',
 //             'today',
 //             'max',

@@ -19,4 +19,9 @@ class GuFix extends BaseGuFix {
         2 => '深证',
     ];
 
+    //返回形式:600149(廊坊发展)
+    public static function getNameByCode($code) {
+        $model = self::findOne(['code' => $code]);
+        return $model ? ($code . '(' . $model->name . ')') : $code; 
+    }
 }

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\GuFix;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\GuRecentSearch */
@@ -23,7 +24,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
 
             'id',
-            'code',
+            [
+                'label' => '股票代码',
+                'value' => function($model) {
+                    return GuFix::getNameByCode($model->code);
+                },
+            ],
             'day',
             'final_zjc',
             'created_at',

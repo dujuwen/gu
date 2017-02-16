@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\GuMonitor;
+use app\models\GuFix;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\GuMonitorSearch */
@@ -23,7 +24,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'id',
-            'code',
+            [
+                'label' => '股票代码',
+                'value' => function($model) {
+                    return GuFix::getNameByCode($model->code);
+                },
+            ],
             [
                 'label' => '状态',
                 'value' => function($model) {

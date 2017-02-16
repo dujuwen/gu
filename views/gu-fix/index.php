@@ -24,8 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             'name',
+            'code',
             [
-                'label' => '所属证券交易所',
+                'label' => '证券交易所',
                 'value' => function($model){
                     return GuFix::$types2[$model->type];
                 },

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\GuMonitor;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\GuRecentSearch */
@@ -16,7 +17,7 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
 	<div class="row">
-        <div class="col-md-6"> <?= $form->field($model, 'code') ?> </div>
+        <div class="col-md-6"> <?= $form->field($model, 'code')->dropDownList(GuMonitor::getCodeName(), ['prompt' => '选择']) ?> </div>
         <div class="col-md-6"> <?= $form->field($model, 'day') ?> </div>
     </div>
 
