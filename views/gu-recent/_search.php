@@ -16,9 +16,8 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
 	<div class="row">
-        <div class="col-md-4"> <?= $form->field($model, 'id') ?> </div>
-        <div class="col-md-4"> <?= $form->field($model, 'code') ?> </div>
-        <div class="col-md-4"> <?= $form->field($model, 'day') ?> </div>
+        <div class="col-md-6"> <?= $form->field($model, 'code') ?> </div>
+        <div class="col-md-6"> <?= $form->field($model, 'day') ?> </div>
     </div>
 
     <div class="form-group">
