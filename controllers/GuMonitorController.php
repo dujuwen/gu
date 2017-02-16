@@ -5,14 +5,14 @@ namespace app\controllers;
 use Yii;
 use app\models\GuMonitor;
 use app\models\GuMonitorSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\library\base\BaseController;
 
 /**
  * GuMonitorController implements the CRUD actions for GuMonitor model.
  */
-class GuMonitorController extends Controller
+class GuMonitorController extends BaseController
 {
     /**
      * @inheritdoc

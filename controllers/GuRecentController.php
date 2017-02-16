@@ -5,14 +5,14 @@ namespace app\controllers;
 use Yii;
 use app\models\GuRecent;
 use app\models\GuRecentSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\library\base\BaseController;
 
 /**
  * GuRecentController implements the CRUD actions for GuRecent model.
  */
-class GuRecentController extends Controller
+class GuRecentController extends BaseController
 {
     /**
      * @inheritdoc

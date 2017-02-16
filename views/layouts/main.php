@@ -27,32 +27,43 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => '主页',
+        'brandLabel' => 'GU',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+//     echo Nav::widget([
+//         'options' => ['class' => 'navbar-nav navbar-right'],
+//         'items' => [
+//             ['label' => '首页', 'url' => ['/site/index']],
+// //             ['label' => '关于', 'url' => ['/site/about']],
+// //             ['label' => '联系', 'url' => ['/site/contact']],
+//             Yii::$app->user->isGuest ? (
+//                 ['label' => '登陆', 'url' => ['/site/login']]
+//             ) : (
+//                 '<li>'
+//                 . Html::beginForm(['/site/logout'], 'post')
+//                 . Html::submitButton(
+//                     '登出 (' . Yii::$app->user->identity->username . ')',
+//                     ['class' => 'btn btn-link logout']
+//                 )
+//                 . Html::endForm()
+//                 . '</li>'
+//             )
+//         ],
+//     ]);
+
+    echo Nav::widget([
+        'options' => ['class' =>'navbar-nav navbar-left'],
+        'items' => !empty($this->params['leftMenu']) ? $this->params['leftMenu'] : array(),
+    ]);
+    
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => '首页', 'url' => ['/site/index']],
-            ['label' => '关于', 'url' => ['/site/about']],
-            ['label' => '联系', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => '登陆', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    '登出 (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => !empty($this->params['rightMenu']) ? $this->params['rightMenu'] : array(),
     ]);
+    
     NavBar::end();
     ?>
 

@@ -3,16 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\GuChange1;
-use app\models\GuChange1Search;
+use app\models\GuMenu;
+use app\models\GuMenuSearch;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\library\base\BaseController;
+use app\models\User;
 
 /**
- * GuChange1Controller implements the CRUD actions for GuChange1 model.
+ * GuMenuController implements the CRUD actions for GuMenu model.
  */
-class GuChange1Controller extends BaseController
+class GuMenuController extends BaseController
 {
     /**
      * @inheritdoc
@@ -30,12 +31,12 @@ class GuChange1Controller extends BaseController
     }
 
     /**
-     * Lists all GuChange1 models.
+     * Lists all GuMenu models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new GuChange1Search();
+        $searchModel = new GuMenuSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +46,7 @@ class GuChange1Controller extends BaseController
     }
 
     /**
-     * Displays a single GuChange1 model.
+     * Displays a single GuMenu model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +58,13 @@ class GuChange1Controller extends BaseController
     }
 
     /**
-     * Creates a new GuChange1 model.
+     * Creates a new GuMenu model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new GuChange1();
+        $model = new GuMenu();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +76,7 @@ class GuChange1Controller extends BaseController
     }
 
     /**
-     * Updates an existing GuChange1 model.
+     * Updates an existing GuMenu model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,28 +95,30 @@ class GuChange1Controller extends BaseController
     }
 
     /**
-     * Deletes an existing GuChange1 model.
+     * Deletes an existing GuMenu model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->status = User::STATUS_DELETE;
+        $model->save();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the GuChange1 model based on its primary key value.
+     * Finds the GuMenu model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return GuChange1 the loaded model
+     * @return GuMenu the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = GuChange1::findOne($id)) !== null) {
+        if (($model = GuMenu::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

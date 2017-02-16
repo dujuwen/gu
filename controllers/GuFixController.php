@@ -15,7 +15,7 @@ use yii\filters\VerbFilter;
  * http://www.gu.com/gu-fix
  * 
  */
-class GuFixController extends Controller
+class GuFixController extends BaseController
 {
     /**
      * @inheritdoc

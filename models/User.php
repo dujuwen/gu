@@ -10,6 +10,15 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public $authKey;
     public $accessToken;
 
+    //统一状态
+    const STATUS_NORMAL = 1; //正常
+    const STATUS_DELETE = 2; //删除
+
+    public static $status = [
+        self::STATUS_NORMAL => '正常',
+        self::STATUS_DELETE => '删除'
+    ];
+    
     private static $users = [
         '100' => [
             'id' => '100',
