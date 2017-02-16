@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\GuFix;
+use app\models\GuMonitor;
 
 /**
- * GuFixSearch represents the model behind the search form about `app\models\GuFix`.
+ * GuMonitorSearch represents the model behind the search form about `app\models\GuMonitor`.
  */
-class GuFixSearch extends GuFix
+class GuMonitorSearch extends GuMonitor
 {
     /**
      * @inheritdoc
@@ -18,9 +18,8 @@ class GuFixSearch extends GuFix
     public function rules()
     {
         return [
-            [['id', 'type', 'total', 'circulation', 'hand_num', 'left_num'], 'integer'],
-            [['name', 'pingyin', 'code'], 'safe'],
-            [['hand_rate'], 'number'],
+            [['id', 'status'], 'integer'],
+            [['code', 'created_at'], 'safe'],
         ];
     }
 
@@ -42,7 +41,7 @@ class GuFixSearch extends GuFix
      */
     public function search($params)
     {
-        $query = GuFix::find();
+        $query = GuMonitor::find();
 
         // add conditions that should always apply here
 
@@ -61,16 +60,11 @@ class GuFixSearch extends GuFix
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'type' => $this->type,
-            'total' => $this->total,
-            'circulation' => $this->circulation,
-            'hand_rate' => $this->hand_rate,
-            'hand_num' => $this->hand_num,
-            'left_num' => $this->left_num,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'pingyin', $this->pingyin]);
+        $query->andFilterWhere(['like', 'code', $this->code]);
 
         return $dataProvider;
     }

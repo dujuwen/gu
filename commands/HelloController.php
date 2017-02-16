@@ -39,7 +39,7 @@ class HelloController extends Controller
         //v_s_sz399001 = "51~深证成指~399001~10177.25~-87.67~-0.85~184658833~26178875~~";
     }
 
-    //固定数据导入
+    //固定数据导入,获取基本code
     //.yii hello/fix
     public function actionFix()
     {
@@ -200,5 +200,16 @@ class HelloController extends Controller
         'http://qt.gtimg.cn/q=s_sh600650'; //最终成交
         'http://qt.gtimg.cn/r=0.6789q=sh600650'; //实时数据
         //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
+    }
+
+    //获得主力增减仓 
+    private function getZJC($type, $code) {
+        try {
+            $code = (($type == 1) ? 'sh' : 'sz') . $code;
+        } catch (\Exception $e) {
+            return 0;
+        }
+
+        return 0;
     }
 }

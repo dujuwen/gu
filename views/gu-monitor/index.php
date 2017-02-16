@@ -2,34 +2,34 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\GuMonitor;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\GuFixSearch */
+/* @var $searchModel app\models\GuMonitorSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '股票';
+$this->title = '需要记录活动数据股票';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="gu-fix-index">
+<div class="gu-monitor-index">
 
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?php // Html::a('Create Gu Fix', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('添加', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             'id',
-            'type',
-            'name',
-            'pingyin',
-            'total',
-            'circulation',
-            'hand_rate',
-            'hand_num',
-            'left_num',
+            'code',
+            [
+                'label' => '状态',
+                'value' => function($model) {
+                    return GuMonitor::$status[$model->status];
+                },
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
