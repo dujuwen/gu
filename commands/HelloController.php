@@ -13,6 +13,7 @@ use yii\helpers\StringHelper;
 use app\models\GuFix;
 use app\models\GuMonitor;
 use app\models\GuChange1;
+use app\models\GuRecent;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -215,6 +216,15 @@ class HelloController extends Controller
                 $model->current_date_ = date('Y-m-d');
                 $re = $model->save();
                 //var_dump($re, $model->getFirstErrors());
+
+                if (date('H:i:s') > '15:00:00') {
+                    //每日增减仓情况
+                    $recent = new GuRecent();
+                    $recent->code = $code;
+                    $recent->day = date('Y-m-d');
+                    $recent->final_zjc = floatval($zjc[3]);
+                    $recent->save();
+                }
             }
         }
     }

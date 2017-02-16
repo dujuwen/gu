@@ -32,9 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'deal_num',
             // 'change_rate',
             // 'amplitude',
-            // 'current_date',
             // 'current_date_',
             'z_j_c',
+            [
+                'label' => '当前时间',
+                'attribute' => 'current_date',
+                'format' => ['date', 'php:Y-m-d H:i:s']
+            ],
             // 'current',
             // 'rate',
             // 'up_limit',

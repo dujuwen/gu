@@ -69,7 +69,7 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
             'deal_num' => '成交额',
             'change_rate' => '换手率',
             'amplitude' => '振幅',
-            'current_date' => '当前时间(时间戳)',
+            'current_date' => '当前时间',
             'current_date_' => '当前日期',
             'z_j_c' => '今日增减仓(单位万元)',
             'current' => '当前价格相对增减',
