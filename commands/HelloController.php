@@ -11,6 +11,8 @@ use yii\console\Controller;
 use app\library\Util;
 use yii\helpers\StringHelper;
 use app\models\GuFix;
+use app\models\GuMonitor;
+use app\models\GuChange1;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -194,22 +196,47 @@ class HelloController extends Controller
     }
 
     //获取动态信息
+    //./yii hello/change-info
     public function actionChangeInfo()
     {
-        $change_url = 'http://web.sqt.gtimg.cn/q=sh600650?r=0.2256620838672143';
-        'http://qt.gtimg.cn/q=s_sh600650'; //最终成交
-        'http://qt.gtimg.cn/r=0.6789q=sh600650'; //实时数据
-        //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
+//         $change_url = 'http://web.sqt.gtimg.cn/q=sh600650?r=0.2256620838672143';
+//         'http://qt.gtimg.cn/q=s_sh600650'; //最终成交
+//         'http://qt.gtimg.cn/r=0.6789q=sh600650'; //实时数据
+//         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
+        
+        $codes = GuMonitor::find()->select('code')->where(['status' => GuMonitor::STATUS_NORMAL])->asArray()->column();
+        foreach ($codes as $code) {
+            $zjc = $this->getAllData($code);
+            if (is_array($zjc) && count($zjc)) {
+                $model = new GuChange1();
+                $model->code = $code;
+                $model->z_j_c = floatval($zjc[3]);
+                $model->current_date = time();
+                $model->current_date_ = date('Y-m-d');
+                $re = $model->save();
+                //var_dump($re, $model->getFirstErrors());
+            }
+        }
     }
 
     //获得主力增减仓 
-    private function getZJC($type, $code) {
+    // 数组的key=3是增加仓
+    private function getAllData($code) {
         try {
-            $code = (($type == 1) ? 'sh' : 'sz') . $code;
+            $rand = mt_rand() / mt_getrandmax();
+            $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
+            $code = $tmp . $code;
+            $zjc_url = 'http://qt.gtimg.cn/r='. $rand .'&q=ff_' . $code;
+            $data = Util::curl($zjc_url);
+            if ($data) {
+                $data = explode('~', $data);
+                return $data;
+            }
         } catch (\Exception $e) {
             return 0;
         }
 
         return 0;
     }
+
 }
