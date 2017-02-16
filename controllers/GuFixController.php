@@ -8,6 +8,7 @@ use app\models\GuFixSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\library\base\BaseController;
 
 /**
  * GuFixController implements the CRUD actions for GuFix model.
