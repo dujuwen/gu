@@ -47,7 +47,7 @@ class BaseGuFix extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'type' => '1上证,2深证',
+            'type' => '所属证券交易所',
             'code' => '股票代码',
             'name' => '股票名称',
             'pingyin' => '股票名称拼音',

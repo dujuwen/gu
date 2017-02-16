@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\GuFix;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\GuFixSearch */
@@ -17,7 +18,7 @@ use yii\widgets\ActiveForm;
 
 	<div class="row">
         <div class="col-md-4"> <?= $form->field($model, 'id') ?> </div>
-        <div class="col-md-4"> <?= $form->field($model, 'type') ?> </div>
+        <div class="col-md-4"> <?= $form->field($model, 'type')->dropDownList(GuFix::$types2, ['prompt' => '选择']) ?> </div>
         <div class="col-md-4"> <?= $form->field($model, 'name') ?> </div>
     </div>
 

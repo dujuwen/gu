@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\GuFix */
 
-$this->title = 'Update Gu Fix: ' . $model->name;
+$this->title = '更新: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Gu Fixes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';

@@ -14,4 +14,9 @@ class GuFix extends BaseGuFix {
         self::TYPE_SZ => 2
     ];
 
+    public static $types2 = [
+        1 => '上证',
+        2 => '深证',
+    ];
+
 }

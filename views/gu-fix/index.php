@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\GuFix;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\GuFixSearch */
@@ -22,16 +23,25 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             'id',
-            'type',
             'name',
-            'pingyin',
+            [
+                'label' => '所属证券交易所',
+                'value' => function($model){
+                    return GuFix::$types2[$model->type];
+                },
+            ],
+            //'pingyin',
             'total',
             'circulation',
             'hand_rate',
             'hand_num',
             'left_num',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => '操作',
+            ],
         ],
     ]); ?>
 </div>
+;
