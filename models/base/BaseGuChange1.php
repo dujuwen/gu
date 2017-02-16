@@ -80,7 +80,7 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
             'sh_num' => '上证涨跌额度',
             'sz_rate' => '深证涨跌幅度',
             'sz_num' => '深圳涨跌额度',
-            'created_at' => 'Created At',
+            'created_at' => '创建时间',
         ];
     }
 
