@@ -16,7 +16,9 @@ use app\models\GuMonitor;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'code')->dropDownList(GuMonitor::getCodeName(), ['prompt' => '选择']) ?>
+	<div class="row">
+        <div class="col-md-6"> <?= $form->field($model, 'code')->dropDownList(GuMonitor::getCodeName(), ['prompt' => '选择']) ?> </div>
+    </div>
 
     <?php // echo $form->field($model, 'min') ?>
 

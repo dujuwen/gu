@@ -49,7 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'sz_num',
             // 'created_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => '操作',
+            ],
         ],
     ]); ?>
 </div>
