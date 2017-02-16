@@ -10,11 +10,12 @@ use yii\widgets\ActiveForm;
 
 <div class="gu-recent-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['fieldClass' => 'app\library\DateField']); ?>
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'day')->textInput() ?>
+    <?php // echo $form->field($model, 'day')->dateTimePicker(['plugin_options' => ['startDate' => date('Y-m-d H:i:s'), 'minuteStep' => 10]]) ?>
 
     <?= $form->field($model, 'final_zjc')->textInput() ?>
 
