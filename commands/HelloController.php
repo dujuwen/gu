@@ -217,16 +217,25 @@ class HelloController extends Controller
             if (($hms >= '09:30:00' && $hms <= '11:30:00') || ($hms >= '13:00:00' && $hms <= '15:00:00')) {
                 $codes = GuMonitor::find()->select('code')->where(['status' => GuMonitor::STATUS_NORMAL])->asArray()->column();
                 foreach ($codes as $code) {
-                    $zjc = $this->getAllData($code);
+                    $zjc = $this->getAllData($code); //增加仓数据
                     if (is_array($zjc) && count($zjc)) {
                         $model = new GuChange1();
                         $model->code = $code;
                         $model->z_j_c = floatval($zjc[3]);
                         $model->current_date = time();
                         $model->current_date_ = date('Y-m-d');
+
+                        $realData = $this->getTodayChange(600149); //价格变化数据
+                        if (is_array($realData) && count($realData)) {
+                            $model->current = $realData[3]; //当前价格
+                            $model->rate = $realData[5]; //当前浮动百分比
+                            $model->deal_count = $realData[6]; //成交量
+                            $model->deal_num = $realData[7]; //成交额
+                        }
+
                         $re = $model->save();
                         //var_dump($re, $model->getFirstErrors());
-                
+
                         if (date('H:i:s') > '15:00:00') {
                             //每日增减仓情况
                             $recent = new GuRecent();
@@ -247,8 +256,10 @@ class HelloController extends Controller
     }
 
     //获得主力增减仓 
-    // 数组的key=3是增加仓
+    //数组的key=3是增加仓
     private function getAllData($code) {
+        //http://qt.gtimg.cn/r=0.988934817751348q=s_sh600149 //简单数据url
+        //http://web.sqt.gtimg.cn/q=sh600149?r=0.0756269266558307 //详细数据url
         try {
             $rand = mt_rand() / mt_getrandmax();
             $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
@@ -264,6 +275,28 @@ class HelloController extends Controller
         }
 
         return 0;
+    }
+
+    //获得数据类似v_s_sh600425="1~青松建化~600425~7.04~0.37~5.55~1538364~106235~~97.07";
+    //数组key 1名称, 2代码, 3当前价格, 4涨跌额, 5涨跌百分百, 6成交手数(手), 7成交额(万)
+    private function getTodayChange($code) {
+        //http://qt.gtimg.cn/r=0.988934817751348q=s_sh600425 //简单数据url
+        try {
+            $rand = mt_rand() / mt_getrandmax();
+            $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
+            $code = $tmp . $code;
+            $url = 'http://qt.gtimg.cn/r='. $rand .'&q=s_' . $code;
+            $data = Util::curl($url);
+            $data = iconv('GBK', 'utf-8', $data);
+            if ($data) {
+                $data = explode('~', $data);
+                return $data;
+            }
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return [];
     }
 
 }
