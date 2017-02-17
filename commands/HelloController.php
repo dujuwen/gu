@@ -43,6 +43,7 @@ class HelloController extends Controller
     }
 
     //固定数据导入,获取基本code
+    //这个一周执行一次
     //.yii hello/fix
     public function actionFix()
     {
@@ -197,8 +198,8 @@ class HelloController extends Controller
     }
 
     //获取动态信息
-    //./yii hello/change-info
-    public function actionChangeInfo()
+    //./yii hello/c
+    public function actionC()
     {
 //         $change_url = 'http://web.sqt.gtimg.cn/q=sh600650?r=0.2256620838672143';
 //         'http://qt.gtimg.cn/q=s_sh600650'; //最终成交
