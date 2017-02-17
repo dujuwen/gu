@@ -227,11 +227,11 @@ class HelloController extends Controller
                         $model->current_date_ = date('Y-m-d');
 
                         //key 1名称, 2代码, 3当前价格, 4涨跌额, 5涨跌百分百, 6成交手数(手), 7成交额(万)
-                        $realData = $this->getTodayChange($code); //成交数据
-                        if (is_array($realData) && count($realData)) {
-                            $model->deal_count = floatval($realData[6]); //成交量(手)
-                            $model->deal_num = floatval($realData[7]); //成交额(万)
-                        }
+//                         $realData = $this->getTodayChange($code); //成交数据
+//                         if (is_array($realData) && count($realData)) {
+//                             $model->deal_count = floatval($realData[6]); //成交量(手)
+//                             $model->deal_num = floatval($realData[7]); //成交额(万)
+//                         }
 
                         //key 3当前价格, 4左收, 5今开, 31价格波动值, 32价格波动比例, 33最高, 34最低, 38换手率, 43振幅
                         $realData2 = $this->getTodayChange2($code); //价格数据
