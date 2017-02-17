@@ -207,39 +207,42 @@ class HelloController extends Controller
 //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
 
         set_time_limit(0);
-        $isContinue = true;
-        while ($isContinue) {
-            $codes = GuMonitor::find()->select('code')->where(['status' => GuMonitor::STATUS_NORMAL])->asArray()->column();
-            foreach ($codes as $code) {
-                $zjc = $this->getAllData($code);
-                if (is_array($zjc) && count($zjc)) {
-                    $model = new GuChange1();
-                    $model->code = $code;
-                    $model->z_j_c = floatval($zjc[3]);
-                    $model->current_date = time();
-                    $model->current_date_ = date('Y-m-d');
-                    $re = $model->save();
-                    //var_dump($re, $model->getFirstErrors());
-    
-                    if (date('H:i:s') > '15:00:00') {
-                        //每日增减仓情况
-                        $recent = new GuRecent();
-                        $recent->code = $code;
-                        $recent->day = date('Y-m-d');
-                        $recent->final_zjc = floatval($zjc[3]);
-                        $recent->save();
+        $intervalTime = 60; //单位秒
+        while (true) {
+            $hms = date('H:i:s');
+            if ($hms > '15:00:00') {
+                break;
+            }
+
+            if (($hms >= '09:30:00' && $hms <= '11:30:00') || ($hms >= '13:00:00' && $hms <= '15:00:00')) {
+                $codes = GuMonitor::find()->select('code')->where(['status' => GuMonitor::STATUS_NORMAL])->asArray()->column();
+                foreach ($codes as $code) {
+                    $zjc = $this->getAllData($code);
+                    if (is_array($zjc) && count($zjc)) {
+                        $model = new GuChange1();
+                        $model->code = $code;
+                        $model->z_j_c = floatval($zjc[3]);
+                        $model->current_date = time();
+                        $model->current_date_ = date('Y-m-d');
+                        $re = $model->save();
+                        //var_dump($re, $model->getFirstErrors());
+                
+                        if (date('H:i:s') > '15:00:00') {
+                            //每日增减仓情况
+                            $recent = new GuRecent();
+                            $recent->code = $code;
+                            $recent->day = date('Y-m-d');
+                            $recent->final_zjc = floatval($zjc[3]);
+                            $recent->save();
+                        }
                     }
                 }
+    
+                echo 'current time:' . $hms . PHP_EOL;
             }
 
-            $hms = date('H:i:s');
-            if (($hms >= '09:30:00' && $hms <= '11:30:00') || ($hms >= '13:00:00' && $hms <= '15:00:00')) {
-            } else {
-                $isContinue = false;
-            }
-
-            echo 'current time:' . $hms . PHP_EOL;
-            sleep(60);
+            $left = $intervalTime - time() % 60;
+            sleep($left);
         }
     }
 
