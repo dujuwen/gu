@@ -43,8 +43,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'z_j_c',
             'current',
             'rate',
-            'up_limit',
-            'down_limit',
             'sh_rate',
             'sh_num',
             'sz_rate',

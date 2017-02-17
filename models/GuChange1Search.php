@@ -20,7 +20,7 @@ class GuChange1Search extends GuChange1
         return [
             [['id', 'deal_count', 'deal_num', 'current_date', 'z_j_c'], 'integer'],
             [['code', 'current_date_', 'created_at'], 'safe'],
-            [['yesterday', 'today', 'max', 'min', 'change_rate', 'amplitude', 'current', 'rate', 'up_limit', 'down_limit', 'sh_rate', 'sh_num', 'sz_rate', 'sz_num'], 'number'],
+            [['yesterday', 'today', 'max', 'min', 'change_rate', 'amplitude', 'current', 'rate', 'sh_rate', 'sh_num', 'sz_rate', 'sz_num'], 'number'],
         ];
     }
 
@@ -74,8 +74,6 @@ class GuChange1Search extends GuChange1
             'z_j_c' => $this->z_j_c,
             'current' => $this->current,
             'rate' => $this->rate,
-            'up_limit' => $this->up_limit,
-            'down_limit' => $this->down_limit,
             'sh_rate' => $this->sh_rate,
             'sh_num' => $this->sh_num,
             'sz_rate' => $this->sz_rate,

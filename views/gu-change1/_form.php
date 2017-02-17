@@ -40,10 +40,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'rate')->textInput() ?>
 
-    <?= $form->field($model, 'up_limit')->textInput() ?>
-
-    <?= $form->field($model, 'down_limit')->textInput() ?>
-
     <?= $form->field($model, 'sh_rate')->textInput() ?>
 
     <?= $form->field($model, 'sh_num')->textInput() ?>

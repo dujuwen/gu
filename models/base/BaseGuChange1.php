@@ -22,8 +22,6 @@ use Yii;
  * @property double $z_j_c
  * @property double $current
  * @property double $rate
- * @property double $up_limit
- * @property double $down_limit
  * @property double $sh_rate
  * @property double $sh_num
  * @property double $sz_rate
@@ -46,7 +44,7 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['yesterday', 'today', 'max', 'min', 'change_rate', 'amplitude', 'current', 'rate', 'up_limit', 'down_limit', 'sh_rate', 'sh_num', 'sz_rate', 'sz_num', 'z_j_c'], 'number'],
+            [['yesterday', 'today', 'max', 'min', 'change_rate', 'amplitude', 'current', 'rate', 'sh_rate', 'sh_num', 'sz_rate', 'sz_num', 'z_j_c'], 'number'],
             [['deal_count', 'deal_num', 'current_date'], 'integer'],
             [['current_date_', 'created_at'], 'safe'],
             [['code'], 'string', 'max' => 255],
@@ -74,12 +72,10 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
             'z_j_c' => '今日增减仓(万)',
             'current' => '当前价格',
             'rate' => '当前价格相对增减比例',
-            'up_limit' => '涨停',
-            'down_limit' => '跌停',
             'sh_rate' => '上证涨跌幅度',
-            'sh_num' => '上证涨跌额度',
+            'sh_num' => '上证指数值',
             'sz_rate' => '深证涨跌幅度',
-            'sz_num' => '深圳涨跌额度',
+            'sz_num' => '深证指数值',
             'created_at' => '创建时间',
         ];
     }
@@ -101,8 +97,6 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
       `z_j_c` float NOT NULL DEFAULT '0' COMMENT '今日增减仓(单位万元)',
       `current` float NOT NULL DEFAULT '0' COMMENT '当前价格',
       `rate` float NOT NULL DEFAULT '0' COMMENT '当前价格相对增减比例',
-      `up_limit` float NOT NULL DEFAULT '0' COMMENT '涨停',
-      `down_limit` float NOT NULL DEFAULT '0' COMMENT '跌停',
       `sh_rate` float NOT NULL DEFAULT '0' COMMENT '上证涨跌幅度',
       `sh_num` float NOT NULL DEFAULT '0' COMMENT '上证涨跌额度',
       `sz_rate` float NOT NULL DEFAULT '0' COMMENT '深证涨跌幅度',

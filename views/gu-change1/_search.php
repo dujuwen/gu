@@ -53,10 +53,6 @@ function redirect_() {
 
     <?php // echo $form->field($model, 'rate') ?>
 
-    <?php // echo $form->field($model, 'up_limit') ?>
-
-    <?php // echo $form->field($model, 'down_limit') ?>
-
     <?php // echo $form->field($model, 'sh_rate') ?>
 
     <?php // echo $form->field($model, 'sh_num') ?>

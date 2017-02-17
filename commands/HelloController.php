@@ -205,9 +205,9 @@ class HelloController extends Controller
 //         'http://qt.gtimg.cn/q=s_sh600650'; //最终成交
 //         'http://qt.gtimg.cn/r=0.6789q=sh600650'; //实时数据
 //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
-
+        
         set_time_limit(0);
-        $intervalTime = 60; //单位秒
+        $intervalTime = 120; //单位秒
         while (true) {
             $hms = date('H:i:s');
             if ($hms > '15:00:00') {
@@ -232,16 +232,25 @@ class HelloController extends Controller
                             $model->deal_num = floatval($realData[7]); //成交额(万)
                         }
 
-                        //key 3当前价格, 4左收, 5今开, 31价格波动值, 32价格波动比例, 33最高, 34最低, 43振幅
+                        //key 3当前价格, 4左收, 5今开, 31价格波动值, 32价格波动比例, 33最高, 34最低, 38换手率, 43振幅
                         $realData2 = $this->getTodayChange2($code); //价格数据
                         if (is_array($realData2) && count($realData2)) {
                             $model->current = floatval($realData2[3]); //当前价格
-                            $model->rate = floatval($realData2[32]); //当前浮动百分比
                             $model->yesterday = floatval($realData2[4]); //左收
                             $model->today = floatval($realData2[5]); //今开
+                            $model->rate = floatval($realData2[32]); //当前浮动百分比
                             $model->max = floatval($realData2[33]); //最高
                             $model->min = floatval($realData2[34]); //最低
+                            $model->change_rate = floatval($realData2[38]); //换手率
                             $model->amplitude = floatval($realData2[43]); //振幅
+                        }
+                        
+                        $shsz = $this->getShSz();
+                        if (is_array($shsz)) {
+                            $model->sh_num = Util::get($shsz, 1, 0); //上证指数
+                            $model->sh_rate = Util::get($shsz, 2, 0); //上证比例
+                            $model->sz_num = Util::get($shsz, 3, 0); //深证指数
+                            $model->sz_rate = Util::get($shsz, 4, 0); //深证比例
                         }
 
                         $re = $model->save();
@@ -262,7 +271,6 @@ class HelloController extends Controller
             }
 
             $left = $intervalTime - time() % 60;
-            break;
             sleep($left);
         }
     }
@@ -331,5 +339,52 @@ class HelloController extends Controller
         }
 
         return [];
+    }
+
+    //获得当前上证和深证指数
+    /**
+     array(4) {
+      [1] =>
+      string(7) "3214.62" //上证
+      [2] =>
+      string(5) "-0.46" //比例
+      [3] =>
+      string(8) "10214.65" //深证
+      [4] =>
+      string(5) "-0.38" //比例
+    }
+     */
+    private function getShSz() {
+        //http://qt.gtimg.cn/r=0.6956423004204846q=s_sh000001,s_sz399001
+        $re = [];
+        try {
+            $rand = mt_rand() / mt_getrandmax();
+            $url = 'http://qt.gtimg.cn/r='. $rand .'q=s_sh000001';
+            $data = Util::curl($url);
+            $data = iconv('GBK', 'utf-8', $data);
+            if ($data) {
+                $data = explode('~', $data);
+                if (is_array($data) && count($data)) {
+                    $re[1] = $data[3]; //值
+                    $re[2] = $data[5]; //比例
+                }
+            }
+
+            $rand = mt_rand() / mt_getrandmax();
+            $url = 'http://qt.gtimg.cn/r='. $rand .'q=s_sz399001';
+            $data = Util::curl($url);
+            $data = iconv('GBK', 'utf-8', $data);
+            if ($data) {
+                $data = explode('~', $data);
+                if (is_array($data) && count($data)) {
+                    $re[3] = $data[3]; //值
+                    $re[4] = $data[5]; //比例
+                }
+            }
+        } catch (\Exception $e) {
+            return $re;
+        }
+
+        return $re;
     }
 }

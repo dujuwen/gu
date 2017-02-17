@@ -46,8 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             // 'current',
             // 'rate',
-            // 'up_limit',
-            // 'down_limit',
             // 'sh_rate',
             // 'sh_num',
             // 'sz_rate',
