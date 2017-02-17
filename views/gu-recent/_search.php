@@ -17,8 +17,8 @@ use app\models\GuMonitor;
     ]); ?>
 
 	<div class="row">
-        <div class="col-md-6"> <?= $form->field($model, 'code')->dropDownList(GuMonitor::getCodeName(), ['prompt' => '选择']) ?> </div>
         <div class="col-md-6"> <?= $form->field($model, 'day') ?> </div>
+        <div class="col-md-6"> <?= $form->field($model, 'code')->dropDownList(GuMonitor::getCodeName(), ['prompt' => '选择']) ?> </div>
     </div>
 
     <div class="form-group">
