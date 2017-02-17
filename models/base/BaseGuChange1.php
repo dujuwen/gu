@@ -59,7 +59,7 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'code' => '股票代码',
-            'yesterday' => '左收',
+            'yesterday' => '昨收',
             'today' => '今开',
             'max' => '最高',
             'min' => '最低',
@@ -71,7 +71,7 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
             'current_date_' => '当前日期',
             'z_j_c' => '今日增减仓(万)',
             'current' => '当前价格',
-            'rate' => '当前价格相对增减比例',
+            'rate' => '价格波动比例',
             'sh_rate' => '上证涨跌幅度',
             'sh_num' => '上证指数值',
             'sz_rate' => '深证涨跌幅度',
