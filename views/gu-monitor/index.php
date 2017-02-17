@@ -9,7 +9,7 @@ use app\models\GuFix;
 /* @var $searchModel app\models\GuMonitorSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '需要记录活动数据股票';
+$this->title = '监测目标';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="gu-monitor-index">
