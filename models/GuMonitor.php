@@ -16,7 +16,7 @@ class GuMonitor extends BaseGuMonitor {
 
         $re = [];
         foreach ($data as $value) {
-            $re[$value['code']] = $value['name'];
+            $re[$value['code']] = $value['name'] ? $value['name'] : $value['code'];
         }
         return $re;
     }

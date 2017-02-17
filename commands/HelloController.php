@@ -44,7 +44,7 @@ class HelloController extends Controller
 
     //固定数据导入,获取基本code
     //这个一周执行一次
-    //.yii hello/fix
+    //./yii hello/fix
     public function actionFix()
     {
         $fix_url = 'http://stock.gtimg.cn/data/index.php?appn=rank&t=ranka/last&o=1&l=80&v=list_data&p=';
@@ -84,6 +84,7 @@ class HelloController extends Controller
     }
 
     //获取固定信息
+    //./yii hello/fix-info
     public function actionFixInfo()
     {
         $all = GuFix::find()->select('type,code')->asArray()->all();
