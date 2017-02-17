@@ -207,7 +207,7 @@ class HelloController extends Controller
 //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
         
         set_time_limit(0);
-        $intervalTime = 120; //单位秒
+        $intervalTime = 60; //单位秒
         while (true) {
             $hms = date('H:i:s');
             if ($hms > '15:00:00') {
@@ -244,7 +244,7 @@ class HelloController extends Controller
                             $model->change_rate = floatval($realData2[38]); //换手率
                             $model->amplitude = floatval($realData2[43]); //振幅
                         }
-                        
+
                         $shsz = $this->getShSz();
                         if (is_array($shsz)) {
                             $model->sh_num = Util::get($shsz, 1, 0); //上证指数
@@ -266,7 +266,7 @@ class HelloController extends Controller
                         }
                     }
                 }
-    
+
                 echo 'current time:' . $hms . PHP_EOL;
             }
 
