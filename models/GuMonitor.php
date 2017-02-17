@@ -11,13 +11,20 @@ class GuMonitor extends BaseGuMonitor {
     public static $status = [1 => '正常', 2 => '删除'];
     
     public static function getCodeName() {
-        $codes = self::find()->select('code')->where(['status' => self::STATUS_NORMAL])->asArray()->column();
+        $codes = self::find()->select('code')->where(['status' => self::STATUS_NORMAL])->orderBy('orde desc')->asArray()->column();
         $data = GuFix::find()->select('code,name')->where(['code' => $codes])->asArray()->all();
 
         $re = [];
-        foreach ($data as $value) {
-            $re[$value['code']] = $value['name'] ? $value['name'] : $value['code'];
+        foreach ($codes as $code) {
+            foreach ($data as $value) {
+                if ($value['code'] == $code) {
+                    $re[$code] = $value['name'];
+                } else {
+                    continue;
+                }
+            }
         }
+
         return $re;
     }
 }

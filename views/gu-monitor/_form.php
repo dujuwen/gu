@@ -15,6 +15,8 @@ use app\models\GuMonitor;
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'orde')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'status')->textInput()->dropDownList(GuMonitor::$status) ?>
 
     <div class="form-group">

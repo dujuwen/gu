@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $code
  * @property integer $status
+ * @property integer $orde
  * @property string $created_at
  */
 class BaseGuMonitor extends \yii\db\ActiveRecord
@@ -28,7 +29,7 @@ class BaseGuMonitor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status'], 'integer'],
+            [['status', 'orde'], 'integer'],
             [['created_at'], 'safe'],
             [['code'], 'string', 'max' => 255],
         ];
@@ -42,7 +43,8 @@ class BaseGuMonitor extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'code' => '股票代码',
-            'status' => '1正常需要监控,2删除不需要监控',
+            'orde' => '排序',
+            'status' => '状态',
             'created_at' => '创建时间',
         ];
     }

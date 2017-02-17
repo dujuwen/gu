@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return GuMonitor::$status[$model->status];
                 },
             ],
+            'orde',
 
             [   
                 'class' => 'yii\grid\ActionColumn',

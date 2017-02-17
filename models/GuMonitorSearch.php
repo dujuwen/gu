@@ -18,7 +18,7 @@ class GuMonitorSearch extends GuMonitor
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
+            [['id', 'status', 'orde'], 'integer'],
             [['code', 'created_at'], 'safe'],
         ];
     }
@@ -60,11 +60,13 @@ class GuMonitorSearch extends GuMonitor
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'status' => $this->status,
+            'status' => $this->status ? $this->status : 1,
             'created_at' => $this->created_at,
         ]);
 
         $query->andFilterWhere(['like', 'code', $this->code]);
+
+        $query->orderBy('orde desc');
 
         return $dataProvider;
     }
