@@ -9,6 +9,20 @@ use app\models\GuMonitor;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<script>
+function redirect_() {
+	//window.location.href = '';
+	var code = $("#guchange1search-code").val();
+	if(code){
+		if (code.substring(0,1) == 6) {
+        	window.open('http://gu.qq.com/sh' + code);
+		} else {
+        	window.open('http://gu.qq.com/sz' + code);
+		}
+    }
+}
+</script>
+
 <div class="gu-change1-search">
 
     <?php $form = ActiveForm::begin([
@@ -56,6 +70,7 @@ use app\models\GuMonitor;
     <div class="form-group">
         <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('重置', ['class' => 'btn btn-default']) ?>
+        <?= Html::a('跳转', 'javascript:void(0)', ['class' => 'btn btn-success', 'onclick' => 'redirect_()']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
