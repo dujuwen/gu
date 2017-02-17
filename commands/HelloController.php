@@ -225,12 +225,23 @@ class HelloController extends Controller
                         $model->current_date = time();
                         $model->current_date_ = date('Y-m-d');
 
-                        $realData = $this->getTodayChange(600149); //价格变化数据
+                        //key 1名称, 2代码, 3当前价格, 4涨跌额, 5涨跌百分百, 6成交手数(手), 7成交额(万)
+                        $realData = $this->getTodayChange($code); //成交数据
                         if (is_array($realData) && count($realData)) {
-                            $model->current = $realData[3]; //当前价格
-                            $model->rate = $realData[5]; //当前浮动百分比
-                            $model->deal_count = $realData[6]; //成交量
-                            $model->deal_num = $realData[7]; //成交额
+                            $model->deal_count = floatval($realData[6]); //成交量(手)
+                            $model->deal_num = floatval($realData[7]); //成交额(万)
+                        }
+
+                        //key 3当前价格, 4左收, 5今开, 31价格波动值, 32价格波动比例, 33最高, 34最低, 43振幅
+                        $realData2 = $this->getTodayChange2($code); //价格数据
+                        if (is_array($realData2) && count($realData2)) {
+                            $model->current = floatval($realData2[3]); //当前价格
+                            $model->rate = floatval($realData2[32]); //当前浮动百分比
+                            $model->yesterday = floatval($realData2[4]); //左收
+                            $model->today = floatval($realData2[5]); //今开
+                            $model->max = floatval($realData2[33]); //最高
+                            $model->min = floatval($realData2[34]); //最低
+                            $model->amplitude = floatval($realData2[43]); //振幅
                         }
 
                         $re = $model->save();
@@ -251,6 +262,7 @@ class HelloController extends Controller
             }
 
             $left = $intervalTime - time() % 60;
+            break;
             sleep($left);
         }
     }
@@ -258,8 +270,6 @@ class HelloController extends Controller
     //获得主力增减仓 
     //数组的key=3是增加仓
     private function getAllData($code) {
-        //http://qt.gtimg.cn/r=0.988934817751348q=s_sh600149 //简单数据url
-        //http://web.sqt.gtimg.cn/q=sh600149?r=0.0756269266558307 //详细数据url
         try {
             $rand = mt_rand() / mt_getrandmax();
             $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
@@ -299,4 +309,27 @@ class HelloController extends Controller
         return [];
     }
 
+    //获得类似数据v_sh600149="1~廊坊发展~600149~22.88~23.17~23.18~109920~48567~61353~22.88~51~22.87~250~22.86~108~22.85~854~22.84~73~22.90~510~22.92~101~22.93~7~22.94~1~22.95~110~
+    //11:30:02/22.88/12/S/27456/15178|11:29:58/22.88/24/S/54912/15172|11:29:56/22.90/1/B/2290/15163|11:29:49/22.90/11/B/25190/15151|11:29:47/22.88/500/S/1144261/15147|11:29:37/22.92/2/B/4584/15129~20170217113553~
+    //-0.29~-1.25~23.38~22.81~22.88/109908/252957682~109920~25299~2.89~~~23.38~22.81~2.46~86.98~86.98~44.98~25.49~20.85~0.83";
+    //key 3当前价格, 4左收, 5今开, 31价格波动值, 32价格波动比例, 33最高, 34最低
+    private function getTodayChange2($code) {
+        //http://web.sqt.gtimg.cn/q=sh600149?r=0.0756269266558307 //详细数据url
+        try {
+            $rand = mt_rand() / mt_getrandmax();
+            $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
+            $code = $tmp . $code;
+            $url = 'http://web.sqt.gtimg.cn/q='. $rand .'&q=' . $code;
+            $data = Util::curl($url);
+            $data = iconv('GBK', 'utf-8', $data);
+            if ($data) {
+                $data = explode('~', $data);
+                return $data;
+            }
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return [];
+    }
 }
