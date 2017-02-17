@@ -199,6 +199,7 @@ class HelloController extends Controller
 
     //获取动态信息
     //./yii hello/c
+    //后面优化下请求,多次请求合并!!
     public function actionC()
     {
 //         $change_url = 'http://web.sqt.gtimg.cn/q=sh600650?r=0.2256620838672143';
