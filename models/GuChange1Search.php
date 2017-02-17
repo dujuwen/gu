@@ -70,7 +70,7 @@ class GuChange1Search extends GuChange1
             'change_rate' => $this->change_rate,
             'amplitude' => $this->amplitude,
             'current_date' => $this->current_date,
-            'current_date_' => $this->current_date_,
+            'current_date_' => $this->current_date_ ? $this->current_date_ : date('Y-m-d'),
             'z_j_c' => $this->z_j_c,
             'current' => $this->current,
             'rate' => $this->rate,

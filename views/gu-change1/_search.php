@@ -17,6 +17,7 @@ use app\models\GuMonitor;
     ]); ?>
 
 	<div class="row">
+        <div class="col-md-6"> <?php echo $form->field($model, 'current_date_') ?> </div>
         <div class="col-md-6"> <?= $form->field($model, 'code')->dropDownList(GuMonitor::getCodeName(), ['prompt' => '选择']) ?> </div>
     </div>
 
@@ -29,8 +30,6 @@ use app\models\GuMonitor;
     <?php // echo $form->field($model, 'change_rate') ?>
 
     <?php // echo $form->field($model, 'amplitude') ?>
-
-    <?php // echo $form->field($model, 'current_date') ?>
 
     <?php // echo $form->field($model, 'current_date_') ?>
 
