@@ -245,13 +245,13 @@ class HelloController extends Controller
                             $model->amplitude = floatval($realData2[43]); //振幅
                         }
 
-                        $shsz = $this->getShSz();
-                        if (is_array($shsz)) {
-                            $model->sh_num = Util::get($shsz, 1, 0); //上证指数
-                            $model->sh_rate = Util::get($shsz, 2, 0); //上证比例
-                            $model->sz_num = Util::get($shsz, 3, 0); //深证指数
-                            $model->sz_rate = Util::get($shsz, 4, 0); //深证比例
-                        }
+//                         $shsz = $this->getShSz();
+//                         if (is_array($shsz)) {
+//                             $model->sh_num = Util::get($shsz, 1, 0); //上证指数
+//                             $model->sh_rate = Util::get($shsz, 2, 0); //上证比例
+//                             $model->sz_num = Util::get($shsz, 3, 0); //深证指数
+//                             $model->sz_rate = Util::get($shsz, 4, 0); //深证比例
+//                         }
 
                         $re = $model->save();
                         //var_dump($re, $model->getFirstErrors());
