@@ -9,6 +9,7 @@ return [
     'id' => 'basic-tests',
     'basePath' => dirname(__DIR__),    
     'language' => 'zh-CN',
+    'timeZone'=>'Asia/Chongqing',
     'components' => [
         'db' => $dbParams,
         'mailer' => [

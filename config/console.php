@@ -9,6 +9,7 @@ $config = [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'app\commands',
     'language' => 'zh-CN',
+    'timeZone'=>'Asia/Chongqing',
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
