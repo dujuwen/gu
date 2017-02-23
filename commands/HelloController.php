@@ -414,7 +414,7 @@ class HelloController extends Controller
                 return [];
             }
 
-            $startNum = 4000000;
+            $startNum = 2000000;
             $rand = mt_rand() / mt_getrandmax();
             $str = implode(',', $limit);
             $url = 'http://web.sqt.gtimg.cn/q='. $str .'?r=' . $rand;
