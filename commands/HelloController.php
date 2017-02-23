@@ -389,4 +389,64 @@ class HelloController extends Controller
 
         return $re;
     }
+
+    // ./yii hello/g
+    public function actionG() {
+        $codes = GuFix::find()->select('code')->asArray()->column();
+        $signleHadle = 100;
+        $codesNew = [];
+        foreach ($codes as $code) {
+            if (!StringHelper::startsWith($code, '3')) {
+                $codesNew[] = (StringHelper::startsWith($code, '6') ? 'sh' : 'sz') . $code;
+            }
+        }
+        $chunkArr = array_chunk($codesNew, $signleHadle);
+        $final = [];
+        foreach ($chunkArr as $limit) {
+            $this->getGao($limit);
+        }
+    }
+
+    private function getGao($limit) {
+        //http://web.sqt.gtimg.cn/q=sh601992,sh600720?r=0.0756269266558307
+        try {
+            if (!is_array($limit)) {
+                return [];
+            }
+
+            $startNum = 4000000;
+            $rand = mt_rand() / mt_getrandmax();
+            $str = implode(',', $limit);
+            $url = 'http://web.sqt.gtimg.cn/q='. $str .'?r=' . $rand;
+            $data = Util::curl($url);
+            $data = iconv('GBK', 'utf-8', $data);
+            $re = [];
+            if ($data) {
+                $data = explode(';', $data);
+                foreach ($data as $value) {
+                    $tmp1 = explode('~', $value);
+                    //暂时29是实时数据
+                    $td = $tmp1[29];
+                    $td2 = $tmp1[2] . '/' . $tmp1[1] . '/';
+                    $tmp = explode('/', $td);
+                    if (is_array($tmp)) {
+                        $tmp = array_chunk($tmp, 5, false);
+                        foreach ($tmp as $tvalue) {
+                            $tvalue = array_values($tvalue);
+                            if (count($tvalue) == 5 && $tvalue[3] == 'B') {
+                                $total = $tvalue[1] * $tvalue[2] * 100;
+                                if ($total > $startNum) {
+                                    echo $td2 . ''  . $total . PHP_EOL;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            return [];
+        }
+    
+        return [];
+    }
 }
