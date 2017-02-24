@@ -427,7 +427,8 @@ class HelloController extends Controller
                     $tmp1 = explode('~', $value);
                     //暂时29是实时数据
                     $td = $tmp1[29];
-                    $td2 = $tmp1[2] . '/' . $tmp1[1] . '/';
+                    $code = $tmp1[2];
+                    $td2 = $code . '/' . $tmp1[1];
                     $tmp = explode('/', $td);
                     if (is_array($tmp)) {
                         $tmp = array_chunk($tmp, 5, false);
@@ -436,7 +437,8 @@ class HelloController extends Controller
                             if (count($tvalue) == 5 && $tvalue[3] == 'B') {
                                 $total = $tvalue[1] * $tvalue[2] * 100;
                                 if ($total > $startNum) {
-                                    echo $td2 . ''  . $total . PHP_EOL;
+                                    $curPrice = $this->getTodayChange($code);
+                                    echo $td2 . '/'  . $total . '/' . $curPrice[5]. PHP_EOL;
                                 }
                             }
                         }
