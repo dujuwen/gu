@@ -5,6 +5,7 @@ namespace app\library\base;
 use yii;
 use app\models\GuMenu;
 use app\models\User;
+use app\library\Util;
 
 class BaseController extends \yii\web\Controller
 {
@@ -77,7 +78,7 @@ class BaseController extends \yii\web\Controller
         $ms = GuMenu::find()->select('*')->where(['status' => User::STATUS_NORMAL])->orderBy('orde')->asArray()->all();
         foreach ($ms as $menu) {
             $ret[$menu['id']]['label'] = $menu['label'];
-            $ret[$menu['id']]['url'] = $menu['url'];
+            $ret[$menu['id']]['url'] = Util::isWindows() ? ('/gu/web/index.php' . $menu['url'] ): $menu['url'];
         }
 
         return $ret;

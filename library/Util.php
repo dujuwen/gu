@@ -72,4 +72,9 @@ class Util {
         }
         return $string;
     }
+
+    //判断当前是不是windows环境
+    public static function isWindows() {
+        return strtoupper(substr(PHP_OS,0,3)) === 'WIN';
+    }
 }
