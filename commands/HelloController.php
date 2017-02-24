@@ -414,7 +414,7 @@ class HelloController extends Controller
                 return [];
             }
 
-            $startNum = 2000000;
+            $startNum = 1500000;
             $rand = mt_rand() / mt_getrandmax();
             $str = implode(',', $limit);
             $url = 'http://web.sqt.gtimg.cn/q='. $str .'?r=' . $rand;
@@ -438,6 +438,7 @@ class HelloController extends Controller
                                 $total = $tvalue[1] * $tvalue[2] * 100;
                                 if ($total > $startNum) {
                                     $curPrice = $this->getTodayChange($code);
+                                    $total = ($total > 5000000) ? ($total >= 10000000 ? $total . '(千万)' : $total . '(百万)') : $total;
                                     echo $td2 . '/'  . $total . '/' . $curPrice[5]. PHP_EOL;
                                 }
                             }
