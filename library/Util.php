@@ -81,4 +81,16 @@ class Util {
     public static function formatMoney($num) {
         return number_format($num);
     }
+
+    public static function bigger($num1, $num2) {
+        $num1 = floatval($num1);
+        $num2 = floatval($num2);
+        return ($num1 > $num2) ? $num1 : $num2;
+    }
+
+    public static function smaller($num1, $num2) {
+        $num1 = floatval($num1);
+        $num2 = floatval($num2);
+        return ($num1 > $num2) ? $num2 : $num1;
+    }
 }

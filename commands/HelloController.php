@@ -14,6 +14,7 @@ use app\models\GuFix;
 use app\models\GuMonitor;
 use app\models\GuChange1;
 use app\models\GuRecent;
+use app\models\GuEveryDay;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -100,7 +101,7 @@ class HelloController extends Controller
                 $model->name = $name;
 //                 $re = $model->save(); //注意保存了两次!!!!!!
 //                 if ($re) {
-//                     echo $code . '更新成功, ' . $i . PHP_EOL;
+//                     echo $code . 'update success, ' . $i . PHP_EOL;
 //                     $i++;
 //                 }
 
@@ -109,7 +110,7 @@ class HelloController extends Controller
 //                 var_dump('下面的一天执行一次');die;
 
                 $data = $this->getChangeData($type, $code);
-                if (is_array($data) && count($data)) {
+                if (is_array($data) && count($data) && isset($data[45]) && isset($data[44])) {
                     //44是流通的
                     //45是总的
                     $total = round($data[45], 3) * 100000000;//单位是亿要计算下
@@ -136,7 +137,7 @@ class HelloController extends Controller
                     $model->left_num = $model->circulation - $model->hand_num;
                     $re = $model->save();
                     if ($re) {
-                        echo $code . '更新成功, ' . $i . PHP_EOL;
+                        echo $code . 'update success, ' . $i . PHP_EOL;
                         $i++;
                     }
                 }
@@ -281,23 +282,65 @@ class HelloController extends Controller
     }
 
     //获得主力增减仓
-    //数组的key=3是增加仓
+    //3=>增加仓
     private function getAllData($code) {
         try {
+            if (!$code) {
+            	return [];
+            }
+
+            //http://qt.gtimg.cn/r=0.04984568467072226&q=ff_sz002351,ff_sh600682
             $rand = mt_rand() / mt_getrandmax();
-            $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
-            $code = $tmp . $code;
-            $zjc_url = 'http://qt.gtimg.cn/r='. $rand .'&q=ff_' . $code;
-            $data = Util::curl($zjc_url);
-            if ($data) {
-                $data = explode('~', $data);
-                return $data;
+            if (is_array($code) && count($code)) {
+                $code = array_values($code);
+                $codeStr = '';
+            	foreach ($code as $c) {
+            	    $codeStr .= 'ff_' . $c . ',';
+            	}
+            	$codeStr = rtrim($codeStr, ',');
+            	$zjc_url = 'http://qt.gtimg.cn/r='. $rand .'&q=' . $codeStr;
+            	$data = Util::curl($zjc_url);
+            	if ($data) {
+                	$re = [];
+            	    $data = explode(';', $data);
+            	    if (is_array($data) && count($data)) {
+            	    	foreach ($data as $value) {
+            	    		$tmp = explode('~', $value);
+            	    		if (is_array($tmp) && count($tmp) == 18) {
+            	    		    //3是当然增减仓,13日期,14~17过去几天
+            	    		    //"20170220^10003.25^10796.03"
+            	    		    //日期=>当天增减额
+                	    		$tmpCode = substr($tmp[0], -6);
+            	    			$re[$tmpCode][$tmp[13]] = $tmp[3];
+            	    			for ($j = 14; $j <= 17; $j++) {
+                	    			$t14 = explode('^', $tmp[$j]);
+                	    			if (count($t14) == 3) {
+                    	    			$t14 = array_values($t14);
+                    	    			$diff = floatval($t14[1]) - floatval($t14[2]);
+                	    				$re[$tmpCode][$t14[0]] = $diff;
+                	    			}
+            	    			}
+            	    		}
+            	    	}
+            	    }
+            	    return $re;
+            	}
+            } else {
+                $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
+                $code = $tmp . $code;
+                $zjc_url = 'http://qt.gtimg.cn/r='. $rand .'&q=ff_' . $code;
+                $data = Util::curl($zjc_url);
+                if ($data) {
+                    $data = explode('~', $data);
+                    return $data;
+                }
             }
         } catch (\Exception $e) {
-            return 0;
+            var_dump($e->getMessage(), 'djw');die;
+            return [];
         }
 
-        return 0;
+        return [];
     }
 
     //获得数据类似v_s_sh600425="1~青松建化~600425~7.04~0.37~5.55~1538364~106235~~97.07";
@@ -393,6 +436,7 @@ class HelloController extends Controller
         return $re;
     }
 
+    //显示买入大于一定额度的
     // ./yii hello/g
     public function actionG() {
         $codes = GuFix::find()->select('code')->asArray()->column();
@@ -468,5 +512,93 @@ class HelloController extends Controller
         } else {
             echo '出错了!';
         }
+    }
+
+    //获得最近五日增减仓情况
+    //yii hello/f
+    public function actionF() {
+        //60分
+        //http://ifzq.gtimg.cn/appstock/app/kline/mkline?param=sz002351,m60,,320&_var=m60_today&r=0.5741375416101258
+        $codes = GuFix::find()->select('code')->asArray()->column();
+        $signleHadle = 50;
+        $codesNew = [];
+        foreach ($codes as $code) {
+            if (!StringHelper::startsWith($code, '3')) {
+                $codesNew[] = (StringHelper::startsWith($code, '6') ? 'sh' : 'sz') . $code;
+            }
+        }
+        $chunkArr = array_chunk($codesNew, $signleHadle);
+        foreach ($chunkArr as $limit) {
+            $zjcArr = $this->getAllData($limit);
+            $i = 0;
+            foreach ($zjcArr as $cod => $fiveZjcData) {
+                $re = $this->getRecentMaxMin($cod);
+                if (count($fiveZjcData)) {
+                    foreach ($fiveZjcData as $day => $zjcNum) {
+                        $date = date('Y-m-d', strtotime($day));
+                        $exist = GuEveryDay::findOne(['code' => $cod, 'date_' => $date]);
+                        if ($exist) {
+                        	continue;
+                        }
+
+                    	$model = new GuEveryDay();
+                    	$model->code = $cod;
+                    	$model->date_ = $date;
+                    	$model->incr_decr = floatval($zjcNum);
+                    	if (is_array($re) && count($re) && isset($re[$day])) {
+                        	$model->begin = $re[$day]['begin'];
+                        	$model->end = $re[$day]['end'];
+                        	$model->max = $re[$day]['max'];
+                        	$model->min = $re[$day]['min'];
+                    	}
+                    	if ($model->save()) {
+                    	    $i++;
+                    	}
+                    }
+                }
+            }
+            echo $i . ' add success!' . PHP_EOL;
+        }
+    }
+
+    //获取最近一段时间的波动价格
+    private function getRecentMaxMin($code) {
+    	//http://ifzq.gtimg.cn/appstock/app/kline/mkline?param=sz002351,m60,,320&_var=m60_today&r=0.5741375416101258
+        try {
+            $rand = mt_rand() / mt_getrandmax();
+            $tmp = StringHelper::startsWith($code, '6') ? 'sh' : 'sz';
+            $code = $tmp . $code;
+            $url = 'http://ifzq.gtimg.cn/appstock/app/kline/mkline?param='. $code .',m60,,320&_var=m60_today&r=' . $rand;
+            $data = Util::curl($url);
+            $data = iconv('GBK', 'utf-8', $data);
+            $fre = [];
+            if ($data) {
+                $data = ltrim($data, 'm60_today=');
+                $re = json_decode($data, true);
+                if (is_array($re) && count($re) && isset($re['data'][$code])) {
+                    $data = $re['data'][$code];
+                    if (is_array($data)) {
+                        $forData = array_pop($data);
+                    	if (is_array($forData)) {
+                    		foreach ($forData as $value) {
+                    			if (count($value) == 6 && is_array($value)) {
+                    				$ymd = date('Ymd', strtotime($value[0]));
+                    				if (isset($fre[$ymd])) {
+                        				$fre[$ymd] = ['begin' => Util::smaller($value[1], $fre[$ymd]['begin']), 'end' => Util::bigger($value[2], $fre[$ymd]['end']), 'max' => Util::bigger($value[3], $fre[$ymd]['max']), 'min' => Util::smaller($value[4], $fre[$ymd]['min'])];
+                    				} else {
+                        				$fre[$ymd] = ['begin' => floatval($value[1]), 'end' => floatval($value[2]), 'max' => floatval($value[3]), 'min' => floatval($value[4])];
+                    				}
+                    			}
+                    		}
+                    	}
+                    }
+                }
+            }
+            return $fre;
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return [];
     }
 }
