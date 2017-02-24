@@ -39,11 +39,11 @@ class Util {
         $t = microtime(true);
         $ret = curl_exec($ch);
         $d = microtime(true) - $t;
-        $file = '/tmp/curl_request_performance.log';
-        if(file_exists($file) && filesize($file) > 10485760) { // 10M
-            unlink($file);
-        }
-        file_put_contents($file, date('Y-m-d H:i:s') . "\tcurl\t" . $url . "\t" . ($ret === false ? 'ERROR' : strlen($ret)) . "\t" . ($httpProxy ?: 'DIRECT') . "\t$d\n", FILE_APPEND);
+//         $file = '/tmp/curl_request_performance.log';
+//         if(file_exists($file) && filesize($file) > 10485760) { // 10M
+//             unlink($file);
+//         }
+//         file_put_contents($file, date('Y-m-d H:i:s') . "\tcurl\t" . $url . "\t" . ($ret === false ? 'ERROR' : strlen($ret)) . "\t" . ($httpProxy ?: 'DIRECT') . "\t$d\n", FILE_APPEND);
 
         if ($ret === false) {
             $error = curl_error($ch);
