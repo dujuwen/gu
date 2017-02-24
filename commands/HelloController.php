@@ -452,4 +452,18 @@ class HelloController extends Controller
     
         return [];
     }
+
+    //实时价格
+    public function actionD($code) {
+        if (!$code) {
+            die('code为空');
+        }
+
+        $data = $this->getTodayChange($code);
+        if (is_array($data) && count($data)) {
+            echo "{$data[1]}/{$data[2]}/{$data[5]}" . PHP_EOL;
+        } else {
+            echo '出错了!';
+        }
+    }
 }
