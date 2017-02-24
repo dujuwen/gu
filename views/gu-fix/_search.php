@@ -23,7 +23,7 @@ use app\models\GuFix;
     </div>
 
 	<div class="row">
-        <div class="col-md-4"> <?= $form->field($model, 'pingyin') ?> </div>
+        <div class="col-md-4"> <?= $form->field($model, 'code') ?> </div>
         <div class="col-md-4"> <?= $form->field($model, 'total') ?> </div>
         <div class="col-md-4"> <?= $form->field($model, 'circulation') ?> </div>
     </div>

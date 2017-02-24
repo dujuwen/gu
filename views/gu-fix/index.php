@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\GuFix;
+use app\library\Util;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\GuFixSearch */
@@ -32,11 +33,36 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             //'pingyin',
-            'total',
-            'circulation',
-            'hand_rate',
-            'hand_num',
-            'left_num',
+            [
+                'attribute' => 'total',
+                'value' => function($model){
+                    return Util::formatMoney($model->total);
+                },
+            ],
+            [
+                'attribute' => 'circulation',
+                'value' => function($model){
+                    return Util::formatMoney($model->circulation);
+                },
+            ],
+            [
+                'attribute' => 'hand_rate',
+                'value' => function($model){
+                    return ($model->hand_rate * 100) . '%';
+                },
+            ],
+            [
+                'attribute' => 'hand_num',
+                'value' => function($model){
+                    return Util::formatMoney($model->hand_num);
+                },
+            ],
+            [
+                'attribute' => 'left_num',
+                'value' => function($model){
+                    return Util::formatMoney($model->left_num);
+                },
+            ],
 
             [
                 'class' => 'yii\grid\ActionColumn',

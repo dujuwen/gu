@@ -27,10 +27,10 @@ class HelloController extends Controller
 {
     /**
      * This command echoes what you have entered as the message.
-     * 
+     *
      * /Users/junwendu/Project/github/gu
      * gu git:(master) ./yii hello/index
-     * 
+     *
      * @param string $message the message to be echoed.
      */
     public function actionIndex()
@@ -58,7 +58,7 @@ class HelloController extends Controller
                 if (is_array($arrData) && count($arrData)) {
                     foreach ($arrData as $idStr) {
                         $code = substr($idStr, 2);
-    
+
                         $model = GuFix::findOne(['code' => $code]);
                         if ($model) {
                             continue;
@@ -83,7 +83,7 @@ class HelloController extends Controller
         }
     }
 
-    //获取固定信息
+    //获取固定信息,每天下午三点后执行一次
     //./yii hello/fix-info
     public function actionFixInfo()
     {
@@ -98,30 +98,30 @@ class HelloController extends Controller
                 //名称更新的话一周执行一次
                 $name = $this->getCodeName($type, $code);
                 $model->name = $name;
-                $re = $model->save(); //注意保存了两次!!!!!!
-                if ($re) {
-                    echo $code . '更新成功, ' . $i . PHP_EOL;
-                    $i++;
-                }
+//                 $re = $model->save(); //注意保存了两次!!!!!!
+//                 if ($re) {
+//                     echo $code . '更新成功, ' . $i . PHP_EOL;
+//                     $i++;
+//                 }
 
                 //下面是更新总的市值和流通市值
-                continue;
-                var_dump('下面的一天执行一次');die;
+//                 continue;
+//                 var_dump('下面的一天执行一次');die;
 
                 $data = $this->getChangeData($type, $code);
                 if (is_array($data) && count($data)) {
                     //44是流通的
                     //45是总的
-                    $total = floatval($data[45]) * 100000000;//单位是亿要计算下
-                    if ($total % 100 != 0) {
-                        $total = 100 + $total - ($total % 100);
-                    }
+                    $total = round($data[45], 3) * 100000000;//单位是亿要计算下
+//                     if ($total % 100 != 0) {
+//                         $total = 100 + $total - ($total % 100);
+//                     }
                     $model->total = $total;
 
-                    $circulation = floatval($data[44]) * 100000000; //单位是亿要计算下
-                    if ($circulation % 100 != 0) {
-                        $circulation = 100 + $circulation - ($circulation % 100);
-                    }
+                    $circulation = $data[44] * 100000000; //单位是亿要计算下
+//                     if ($circulation % 100 != 0) {
+//                         $circulation = 100 + $circulation - ($circulation % 100);
+//                     }
                     $model->circulation = $circulation;
 
                     $bigRate = floatval($this->getBigPercent($code)) / 100;
@@ -145,6 +145,9 @@ class HelloController extends Controller
     }
 
     //获取总共的股本数,包括浮动数
+    //1=>名称, 2=>代码, 3=>当前价格, 4=>左收, 5=>今开, 6=>成交手数, 7外盘=>, 8=>内盘,
+    //31=>当前波动价格, 32=>当前波动比例, 33=>当天最高, 34=>当天最低, 37=>成交额, 38=>换手率,
+    //43=>振幅, 44=>流通市值, 45=>总市值, 46=>市净率
     private function getChangeData($type, $code) {
         try {
             $rand = mt_rand() / mt_getrandmax();
@@ -207,7 +210,7 @@ class HelloController extends Controller
 //         'http://qt.gtimg.cn/q=s_sh600650'; //最终成交
 //         'http://qt.gtimg.cn/r=0.6789q=sh600650'; //实时数据
 //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
-        
+
         set_time_limit(0);
         $intervalTime = 60; //单位秒
         while (true) {
@@ -277,7 +280,7 @@ class HelloController extends Controller
         }
     }
 
-    //获得主力增减仓 
+    //获得主力增减仓
     //数组的key=3是增加仓
     private function getAllData($code) {
         try {
@@ -449,7 +452,7 @@ class HelloController extends Controller
         } catch (\Exception $e) {
             return [];
         }
-    
+
         return [];
     }
 

@@ -66,6 +66,7 @@ class GuFixSearch extends GuFix
             'hand_rate' => $this->hand_rate,
             'hand_num' => $this->hand_num,
             'left_num' => $this->left_num,
+            'code' => $this->code,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
