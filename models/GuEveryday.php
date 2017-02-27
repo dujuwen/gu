@@ -5,7 +5,7 @@ namespace app\models;
 use app\models\base\BaseGuEveryday;
 
 class GuEveryDay extends BaseGuEveryday {
-    public static function getRecommend($day = 5, $num = 50) {
+    public static function getRecommend($day = 5, $num = 250) {
         $data = GuEveryDay::find()->select('code, incr_decr')->asArray()->all();
         if (count($data)) {
             $re = [];
@@ -27,7 +27,7 @@ class GuEveryDay extends BaseGuEveryday {
 
             $echoArr = '';
             foreach ($re as $code => $num) {
-                $echoArr[] = $code . '/' . $namesNew[$code] . '/' . $num;
+                $echoArr[$code] = $namesNew[$code] . '/' . $num;
             }
             return $echoArr;
         }
