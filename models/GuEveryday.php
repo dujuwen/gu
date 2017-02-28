@@ -25,11 +25,7 @@ class GuEveryDay extends BaseGuEveryday {
                 $namesNew[$ns['code']] = $ns['name'];
             }
 
-            $echoArr = '';
-            foreach ($re as $code => $num) {
-                $echoArr[$code] = $namesNew[$code] . '/' . $num;
-            }
-            return $echoArr;
+            return [$re, $namesNew];
         }
     }
 }
