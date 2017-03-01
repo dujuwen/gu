@@ -8,7 +8,8 @@ use yii\helpers\StringHelper;
 class ReController extends BaseController {
 
     public function actionIndex() {
-    	$data = GuEveryDay::getRecommend();
+        $day = intval($this->getGet('day')) ?: 3;
+    	$data = GuEveryDay::getRecommend($day);
     	$re = $data[0];
     	$namesNew = $data[1];
     	foreach ($re as $code => $num) {
