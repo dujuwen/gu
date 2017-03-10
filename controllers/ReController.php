@@ -7,8 +7,10 @@ use yii\helpers\StringHelper;
 
 class ReController extends BaseController {
 
+    //默认是最近3天,前50条
     public function actionIndex() {
-        $day = intval($this->getGet('day')) ?: 3;
+        $day = intval($this->getGet('day')) ? intval($this->getGet('day'))  : 3;
+        $limit = intval($this->getGet('limit')) ? intval($this->getGet('limit')) : 50;
     	$data = GuEveryDay::getRecommend($day);
     	$re = $data[0];
     	$namesNew = $data[1];
