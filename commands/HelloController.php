@@ -507,10 +507,10 @@ class HelloController extends Controller
         }
 
         $data = $this->getTodayChange($code);
-        if (is_array($data) && count($data)) {
+        if (is_array($data) && count($data) && count($data) > 5) {
             echo "{$data[1]}/{$data[2]}/{$data[3]}/{$data[5]}" . PHP_EOL;
         } else {
-            echo '出错了!';
+            echo '出错了!' . PHP_EOL;
         }
     }
 
