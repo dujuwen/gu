@@ -27,6 +27,23 @@ use app\models\GuEveryDay;
 class HelloController extends Controller
 {
     /**
+     //一周一次,固定数据导入
+      ./yii hello/fix
+
+     //每天下午3点后执行一次
+     ./yii hello/fix-info
+
+     //实时买入
+     ./yii hello/g
+
+     //实时价格(单价)
+     ./yii hello/real
+
+     //获得最近五日增减仓情况,每天执行一次
+     ./yii hello/five-day
+     */
+
+    /**
      * This command echoes what you have entered as the message.
      *
      * /Users/junwendu/Project/github/gu
@@ -473,8 +490,8 @@ class HelloController extends Controller
                 foreach ($data as $value) {
                     $tmp1 = explode('~', $value);
                     //暂时29是实时数据
-                    $td = $tmp1[29];
-                    $code = $tmp1[2];
+                    $td = $tmp1[29]; //名称
+                    $code = $tmp1[2]; //code
                     $td2 = $code . '/' . $tmp1[1];
                     $tmp = explode('/', $td);
                     if (is_array($tmp)) {
@@ -485,8 +502,9 @@ class HelloController extends Controller
                                 $total = $tvalue[1] * $tvalue[2] * 100;
                                 if ($total > $startNum) {
                                     $curPrice = $this->getTodayChange($code);
+                                    //600221/****/1710000/0.29
                                     $total = ($total > 5000000) ? ($total >= 10000000 ? $total . '(千万)' : $total . '(百万)') : $total;
-                                    echo $td2 . '/'  . $total . '/' . $curPrice[5]. PHP_EOL;
+                                    echo $td2 . '/'  . $total . '/' . $curPrice[5] . GuEveryDay::getChangeByCode($code) . PHP_EOL;
                                 }
                             }
                         }
@@ -501,7 +519,7 @@ class HelloController extends Controller
     }
 
     //实时价格
-    public function actionD($code) {
+    public function actionReal($code) {
         if (!$code) {
             die('code为空');
         }
@@ -516,7 +534,7 @@ class HelloController extends Controller
 
     //获得最近五日增减仓情况,每天执行一次
     //yii hello/f
-    public function actionF() {
+    public function actionFiveDay() {
         //60分
         //http://ifzq.gtimg.cn/appstock/app/kline/mkline?param=sz002351,m60,,320&_var=m60_today&r=0.5741375416101258
         $codes = GuFix::find()->select('code')->asArray()->column();
