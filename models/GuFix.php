@@ -32,7 +32,7 @@ class GuFix extends BaseGuFix {
 
         $percent = 0;
         $leftNum = GuFix::find()->where(['code' => $code])->select('left_num')->column();
-        if (count($leftNum)) {
+        if (count($leftNum) && $leftNum[0] > 100) {
             //$num的单位是万
             $tmpPercent = $percent = $num * 1000000 / $leftNum[0];
             $percent = round($percent, 2) . '%';

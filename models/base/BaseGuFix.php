@@ -17,6 +17,13 @@ use Yii;
  * @property double $hand_rate
  * @property integer $hand_num
  * @property integer $left_num
+ * @property string $zjc_five_day
+ * @property double $day1
+ * @property double $day3
+ * @property double $day5
+ * @property double $rate1
+ * @property double $rate3
+ * @property double $rate5
  */
 class BaseGuFix extends \yii\db\ActiveRecord
 {
@@ -35,7 +42,8 @@ class BaseGuFix extends \yii\db\ActiveRecord
     {
         return [
             [['type', 'total', 'circulation', 'hand_num', 'left_num'], 'integer'],
-            [['hand_rate'], 'number'],
+            [['hand_rate', 'day1', 'day3', 'day5', 'rate1', 'rate3', 'rate5'], 'number'],
+            [['zjc_five_day'], 'string'],
             [['name', 'pingyin', 'code'], 'string', 'max' => 255],
         ];
     }
@@ -56,22 +64,7 @@ class BaseGuFix extends \yii\db\ActiveRecord
             'hand_rate' => '前10股东持有总市值比例',
             'hand_num' => '前10股东持有总市值',
             'left_num' => '实际可以流通的总市值',
+            'zjc_five_day' => '5日增加仓',
         ];
     }
-
-    /**
-     CREATE TABLE `gu_fix` (
-      `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-      `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1上证,2深证',
-      `code` varchar(255) DEFAULT NULL COMMENT '股票代码',
-      `name` varchar(255) DEFAULT NULL COMMENT '股票名称',
-      `pingyin` varchar(255) DEFAULT NULL COMMENT '股票名称拼音',
-      `total` bigint(11) NOT NULL DEFAULT '0' COMMENT '总市值',
-      `circulation` bigint(11) NOT NULL DEFAULT '0' COMMENT '流通市值',
-      `hand_rate` float NOT NULL DEFAULT '0' COMMENT '前10股东持有总市值比例',
-      `hand_num` bigint(11) NOT NULL DEFAULT '0' COMMENT '前10股东持有总市值',
-      `left_num` bigint(11) NOT NULL DEFAULT '0' COMMENT '实际可以流通的总市值',
-      PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=2902 DEFAULT CHARSET=utf8mb4;
-     */
 }

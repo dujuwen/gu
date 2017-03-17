@@ -53,6 +53,7 @@ class HelloController extends Controller
      */
     public function actionIndex()
     {
+        GuEveryDay::updateChangeData();
         //获取上证和深证指数地址
         $sh_zs_index_url = 'http://qt.gtimg.cn/r=0.3978993779751039q=s_sh000001,s_sz399001';
         //数据格式
@@ -532,7 +533,7 @@ class HelloController extends Controller
         if (is_array($data) && count($data) > 5) {
             $tmp = $this->getAllData($code);
             $tmp = isset($tmp[3]) ? $tmp[3] : 0;
-            echo "{$data[1]}/{$data[2]}/{$data[3]}/{$data[5]}/[$tmp]" . PHP_EOL;
+            echo "{$data[1]}/{$data[2]}/{$data[3]}/{$data[5]}/[$tmp]" . GuEveryDay::getChangeByCode($code) . PHP_EOL;
         } else {
             echo '出错了!' . PHP_EOL;
         }
@@ -547,9 +548,7 @@ class HelloController extends Controller
         $signleHadle = 50;
         $codesNew = [];
         foreach ($codes as $code) {
-            if (!StringHelper::startsWith($code, '3')) {
-                $codesNew[] = (StringHelper::startsWith($code, '6') ? 'sh' : 'sz') . $code;
-            }
+            $codesNew[] = (StringHelper::startsWith($code, '6') ? 'sh' : 'sz') . $code;
         }
         $chunkArr = array_chunk($codesNew, $signleHadle);
         foreach ($chunkArr as $limit) {
@@ -583,6 +582,8 @@ class HelloController extends Controller
             }
             echo $i . ' add success!' . PHP_EOL;
         }
+
+        GuEveryDay::updateChangeData();
     }
 
     //获取最近一段时间的波动价格
