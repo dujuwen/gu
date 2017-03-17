@@ -530,7 +530,9 @@ class HelloController extends Controller
 
         $data = $this->getTodayChange($code);
         if (is_array($data) && count($data) > 5) {
-            echo "{$data[1]}/{$data[2]}/{$data[3]}/{$data[5]}" . PHP_EOL;
+            $tmp = $this->getAllData($code);
+            $tmp = isset($tmp[3]) ? $tmp[3] : 0;
+            echo "{$data[1]}/{$data[2]}/{$data[3]}/{$data[5]}/[$tmp]" . PHP_EOL;
         } else {
             echo '出错了!' . PHP_EOL;
         }
