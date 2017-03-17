@@ -504,6 +504,10 @@ class HelloController extends Controller
                                     $curPrice = $this->getTodayChange($code);
                                     //600221/****/1710000/0.29
                                     $total = ($total > 5000000) ? ($total >= 10000000 ? $total . '(千万)' : $total . '(百万)') : $total;
+                                    $all = $this->getAllData($code);
+                                    if (isset($all[3])) {
+                                        $total .= "[{$all[3]}]";
+                                    }
                                     echo $td2 . '/'  . $total . '/' . $curPrice[5] . GuEveryDay::getChangeByCode($code) . PHP_EOL;
                                 }
                             }

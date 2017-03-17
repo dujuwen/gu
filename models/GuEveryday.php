@@ -39,10 +39,9 @@ class GuEveryDay extends BaseGuEveryday {
     }
 
     public static function getChangeByCode($code, $day1 = 1, $day2 = 3, $day3 = 5) {
-        if (isset(self::$changeData[$code])) {
-            return self::$changeData[$code];
-        }
-
+//         if (isset(self::$changeData[$code])) {
+//             return self::$changeData[$code];
+//         }
         $data = GuEveryDay::find()->select('incr_decr')->where(['code' => $code])->orderBy('date_ desc')->limit($day3 + 1)->column();
         $str = '';
 
@@ -54,7 +53,7 @@ class GuEveryDay extends BaseGuEveryday {
             $tmpCount = 0;
             foreach ($data as $num) {
                 $i++;
-                $tmpCount += $num;
+                $tmpCount += round($num, 2);
                 if ($day1 > 0 && $i == $day1) {
                     $t1 = $tmpCount;
                     $str .= '  |' . $tmpCount . '=>' . GuFix::getPecentByCode($code, $tmpCount);
@@ -67,6 +66,8 @@ class GuEveryDay extends BaseGuEveryday {
                     break;
                 }
             }
+        } else {
+            return ' NODATA';
         }
 
         if ($t1 > $t3) {
@@ -93,7 +94,6 @@ class GuEveryDay extends BaseGuEveryday {
             }
         }
 
-        self::$changeData[$code] = $str;
         return $str;
     }
 }
