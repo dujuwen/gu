@@ -628,9 +628,10 @@ class HelloController extends Controller
 
     //推荐数据,每天执行一次
     //yii hello/re
-    public function actionRe($limit = 50, $downRate = 0, $addLeast = 100) {
+    public function actionRe($limit1 = 30, $limit = 30, $downRate = 0, $addLeast = 100) {
         $data = GuChange1::find()->select('code,z_j_c,rate')->orderBy('current_date_ desc, rate asc,z_j_c desc')->limit(GuFix::find()->count())->asArray()->all();
         $i = 0;
+        $overlap = [];
         foreach ($data as $change) {
         	//增仓、下降
         	$code = $change['code'];
@@ -638,33 +639,54 @@ class HelloController extends Controller
         	$zjc = $change['z_j_c'];
         	if ($rate <= $downRate && $zjc > $addLeast) {
         	    $i++;
-        	    if ($i > $limit) {
-        	    	break;
+        	    if ($i <= $limit1) {
+            	    $fix = GuFix::findOne(['code' => $code]);
+            	    $leftNum = '';
+            	    $fiveDay = '';
+            	    $name = '';
+            	    if ($fix) {
+            	        $name = $fix->name;
+            	    	$leftNum = round($fix->left_num / 100000000, 3) . '亿';
+            	    	$fiveDay = $fix->zjc_five_day;
+            	    }
+            	    echo sprintf("%-12s|%-6s|%-6s|%-8s|%10s%s", $name, $code, $rate, $zjc, $leftNum, $fiveDay) . PHP_EOL;
         	    }
-        	    $fix = GuFix::findOne(['code' => $code]);
-        	    $leftNum = '';
-        	    $fiveDay = '';
-        	    $name = '';
-        	    if ($fix) {
-        	        $name = $fix->name;
-        	    	$leftNum = round($fix->left_num / 100000000, 3) . '亿';
-        	    	$fiveDay = $fix->zjc_five_day;
-        	    }
-        	    echo sprintf("%-12s|%-6s|%-6s|%-8s|%10s%s", $name, $code, $rate, $zjc, $leftNum, $fiveDay) . PHP_EOL;
+        	    $overlap[] = $code;
         	}
         }
 
-        echo '------------------------------------------------------------------------' . PHP_EOL;;
+        $lapStr = [];
+        echo '------------------------------------------------------------------------' . PHP_EOL;
         $data = GuFix::find()->select('code,name,left_num,zjc_five_day,rate1,rate3,rate5')->orderBy('rate1 desc,left_num desc, rate3 desc,rate5 desc')->asArray()->all();
+        $i = 0;
+        foreach ($data as $fix) {
+            if ($fix['rate1'] <= $fix['rate3'] &&  $fix['rate3'] <= $fix['rate5']) {
+                $i++;
+                $str = sprintf("%-12s|%-6s|%-6s|%-6s|%-6s%s", $fix['name'], $fix['code'], $fix['rate1'], $fix['rate3'], $fix['rate5'], $fix['zjc_five_day']) . PHP_EOL;
+                if ($i <= $limit) {
+                	echo $str;
+                }
+                if (in_array($fix['code'], $overlap) && ($i <= (3 * $limit))) {
+                    $lapStr[$fix['code']] = "\033[0;36m!!!\x1B[0m" . $str;
+                }
+            }
+        }
+
+        echo '------------------------------------------------------------------------' . PHP_EOL;
         $i = 0;
         foreach ($data as $fix) {
             if ($fix['rate1'] > 0.2 || $fix['rate3'] > 0.5 || $fix['rate5'] > 1) {
                 $i++;
-                if ($i > $limit) {
-                	break;
+                $str = sprintf("%-12s|%-6s|%-6s|%-6s|%-6s%s", $fix['name'], $fix['code'], $fix['rate1'], $fix['rate3'], $fix['rate5'], $fix['zjc_five_day']) . PHP_EOL;
+                if ($i <= $limit) {
+                    echo $str;
                 }
-            	echo sprintf("%-12s|%-6s|%-6s|%-6s|%-6s%s", $fix['name'], $fix['code'], $fix['rate1'], $fix['rate3'], $fix['rate5'], $fix['zjc_five_day']) . PHP_EOL;
             }
+        }
+
+        echo '------------------------------------------------------------------------' . PHP_EOL;
+        foreach ($lapStr as $str) {
+        	echo $str;
         }
     }
 }
