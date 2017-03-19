@@ -79,30 +79,4 @@ class BaseGuChange1 extends \yii\db\ActiveRecord
             'created_at' => '创建时间',
         ];
     }
-
-    /**
-     CREATE TABLE `gu_change_1` (
-      `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-      `code` varchar(255) NOT NULL DEFAULT '' COMMENT '股票代码',
-      `yesterday` float NOT NULL DEFAULT '0' COMMENT '左收',
-      `today` float NOT NULL DEFAULT '0' COMMENT '今开',
-      `max` float NOT NULL DEFAULT '0' COMMENT '最高',
-      `min` float NOT NULL DEFAULT '0' COMMENT '最低',
-      `deal_count` int(11) NOT NULL DEFAULT '0' COMMENT '成交量',
-      `deal_num` int(11) NOT NULL DEFAULT '0' COMMENT '成交额',
-      `change_rate` float NOT NULL DEFAULT '0' COMMENT '换手率',
-      `amplitude` float NOT NULL DEFAULT '0' COMMENT '振幅',
-      `current_date` int(11) DEFAULT NULL COMMENT '当前时间(时间戳)',
-      `current_date_` date DEFAULT NULL COMMENT '当前日期',
-      `z_j_c` float NOT NULL DEFAULT '0' COMMENT '今日增减仓(单位万元)',
-      `current` float NOT NULL DEFAULT '0' COMMENT '当前价格',
-      `rate` float NOT NULL DEFAULT '0' COMMENT '当前价格相对增减比例',
-      `sh_rate` float NOT NULL DEFAULT '0' COMMENT '上证涨跌幅度',
-      `sh_num` float NOT NULL DEFAULT '0' COMMENT '上证涨跌额度',
-      `sz_rate` float NOT NULL DEFAULT '0' COMMENT '深证涨跌幅度',
-      `sz_num` float NOT NULL DEFAULT '0' COMMENT '深圳涨跌额度',
-      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-     */
 }

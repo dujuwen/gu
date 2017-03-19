@@ -51,16 +51,4 @@ class BaseGuRecent extends \yii\db\ActiveRecord
             'updated_at' => '更新时间',
         ];
     }
-
-    /**
-     CREATE TABLE `gu_recent` (
-      `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-      `code` varchar(255) NOT NULL DEFAULT '' COMMENT '股票代码',
-      `day` date NOT NULL COMMENT '日期',
-      `final_zjc` float NOT NULL DEFAULT '0' COMMENT '今天最终增减仓',
-      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='最近几日增减仓数据';
-     */
 }

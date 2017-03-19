@@ -52,18 +52,4 @@ class BaseGuMenu extends \yii\db\ActiveRecord
             'updated_at' => '更新时间',
         ];
     }
-
-    /**
-     CREATE TABLE `gu_menu` (
-      `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-      `label` varchar(255) NOT NULL DEFAULT '' COMMENT '菜单说明',
-      `url` varchar(255) NOT NULL DEFAULT '' COMMENT '路径',
-      `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1正常,2删除',
-      `orde` int(11) NOT NULL DEFAULT '1' COMMENT '排序',
-      `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-      `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-      PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='菜单';
-     */
-
 }
