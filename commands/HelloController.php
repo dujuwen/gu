@@ -90,7 +90,10 @@ class HelloController extends Controller
                         } else {
                             $model->type = GuFix::$types[GuFix::TYPE_SZ];
                         }
-                        $model->save();
+                        $re = $model->save();
+                        if ( ! $re) {
+                        	var_dump($model->getErrors());die;
+                        }
                     }
                 } else {
                     break;
@@ -157,6 +160,8 @@ class HelloController extends Controller
                     if ($re) {
                         echo $code . 'update success, ' . $i . PHP_EOL;
                         $i++;
+                    } else {
+                    	var_dump($model->getErrors());die;
                     }
                 }
             }
@@ -278,6 +283,9 @@ class HelloController extends Controller
 //                         }
 
                         $re = $model->save();
+                        if ( ! $re) {
+                        	var_dump($model->getErrors());die;
+                        }
                         //var_dump($re, $model->getFirstErrors());
 
                         if (date('H:i:s') > '15:00:00') {
@@ -328,7 +336,7 @@ class HelloController extends Controller
             	    		    //3是当然增减仓,13日期,14~17过去几天
             	    		    //"20170220^10003.25^10796.03"
             	    		    //日期=>当天增减额
-                	    		$tmpCode = substr($tmp[0], -6);
+                	    		$tmpCode = substr($tmp[0], -6) . '';
             	    			$re[$tmpCode][$tmp[13]] = $tmp[3];
             	    			for ($j = 14; $j <= 17; $j++) {
                 	    			$t14 = explode('^', $tmp[$j]);
@@ -565,7 +573,7 @@ class HelloController extends Controller
                         }
 
                     	$model = new GuEveryDay();
-                    	$model->code = $cod;
+                    	$model->code = $cod . '';
                     	$model->date_ = $date;
                     	$model->incr_decr = floatval($zjcNum);
                     	if (is_array($re) && count($re) && isset($re[$day])) {
@@ -576,6 +584,8 @@ class HelloController extends Controller
                     	}
                     	if ($model->save()) {
                     	    $i++;
+                    	} else {
+                    		var_dump($model->getErrors());die;
                     	}
                     }
                 }
