@@ -53,9 +53,8 @@ class HelloController extends Controller
      */
     public function actionIndex()
     {
-        GuEveryDay::updateChangeData();
         //获取上证和深证指数地址
-        $sh_zs_index_url = 'http://qt.gtimg.cn/r=0.3978993779751039q=s_sh000001,s_sz399001';
+        //$sh_zs_index_url = 'http://qt.gtimg.cn/r=0.3978993779751039q=s_sh000001,s_sz399001';
         //数据格式
         //v_s_sh000001 = "1~上证指数~000001~3212.99~-4.94~-0.15~241507706~25796524~~";
         //v_s_sz399001 = "51~深证成指~399001~10177.25~-87.67~-0.85~184658833~26178875~~";
@@ -120,30 +119,21 @@ class HelloController extends Controller
                 //名称更新的话一周执行一次
                 $name = $this->getCodeName($type, $code);
                 $model->name = $name;
-//                 $re = $model->save(); //注意保存了两次!!!!!!
-//                 if ($re) {
-//                     echo $code . 'update success, ' . $i . PHP_EOL;
-//                     $i++;
-//                 }
-
                 //下面是更新总的市值和流通市值
-//                 continue;
-//                 var_dump('下面的一天执行一次');die;
-
                 $data = $this->getChangeData($type, $code);
                 if (is_array($data) && count($data) && isset($data[45]) && isset($data[44])) {
                     //44是流通的
                     //45是总的
                     $total = round($data[45], 3) * 100000000;//单位是亿要计算下
-//                     if ($total % 100 != 0) {
-//                         $total = 100 + $total - ($total % 100);
-//                     }
+                    if ($total % 100 != 0) {
+                        $total = 100 + $total - ($total % 100);
+                    }
                     $model->total = $total;
 
                     $circulation = $data[44] * 100000000; //单位是亿要计算下
-//                     if ($circulation % 100 != 0) {
-//                         $circulation = 100 + $circulation - ($circulation % 100);
-//                     }
+                    if ($circulation % 100 != 0) {
+                        $circulation = 100 + $circulation - ($circulation % 100);
+                    }
                     $model->circulation = $circulation;
 
                     $bigRate = floatval($this->getBigPercent($code)) / 100;
@@ -156,6 +146,7 @@ class HelloController extends Controller
                     $model->hand_num = $hand_num;
 
                     $model->left_num = $model->circulation - $model->hand_num;
+                    $model->left_num = intval($model->left_num);
                     $re = $model->save();
                     if ($re) {
                         echo $code . 'update success, ' . $i . PHP_EOL;
@@ -235,31 +226,25 @@ class HelloController extends Controller
 //         'http://qt.gtimg.cn/r=0.6789q=sh600650'; //实时数据
 //         $change_url = 'http://qt.gtimg.cn/r=0.5693976059187198q=s_sz000659';
 
-        set_time_limit(0);
-        $intervalTime = 60; //单位秒
-        while (true) {
-            $hms = date('H:i:s');
-            if ($hms > '15:00:00') {
-                break;
-            }
-
-            if (($hms >= '09:30:00' && $hms <= '11:30:00') || ($hms >= '13:00:00' && $hms <= '15:00:00')) {
-                $codes = GuMonitor::find()->select('code')->where(['status' => GuMonitor::STATUS_NORMAL])->asArray()->column();
-                foreach ($codes as $code) {
-                    $zjc = $this->getAllData($code); //增加仓数据
-                    if (is_array($zjc) && count($zjc)) {
+            //$codes = GuMonitor::find()->select('code')->where(['status' => GuMonitor::STATUS_NORMAL])->asArray()->column();
+            $codes = GuFix::find()->select('code')->asArray()->column();
+            $codes = array_chunk($codes, 50);
+            foreach ($codes as $codeArr) {
+                $data_ = $this->getAllData($codeArr); //增加仓数据
+                if (is_array($data_) && count($data_)) {
+                    foreach ($data_ as $code => $value) {
                         $model = new GuChange1();
                         $model->code = $code;
-                        $model->z_j_c = floatval($zjc[3]);
+                        $model->z_j_c = floatval($value[3]);
                         $model->current_date = time();
                         $model->current_date_ = date('Y-m-d');
 
                         //key 1名称, 2代码, 3当前价格, 4涨跌额, 5涨跌百分百, 6成交手数(手), 7成交额(万)
-//                         $realData = $this->getTodayChange($code); //成交数据
-//                         if (is_array($realData) && count($realData)) {
-//                             $model->deal_count = floatval($realData[6]); //成交量(手)
-//                             $model->deal_num = floatval($realData[7]); //成交额(万)
-//                         }
+                        $realData = $this->getTodayChange($code); //成交数据
+                        if (is_array($realData) && count($realData)) {
+                            $model->deal_count = floatval($realData[6]); //成交量(手)
+                            $model->deal_num = floatval($realData[7]); //成交额(万)
+                        }
 
                         //key 3当前价格, 4左收, 5今开, 31价格波动值, 32价格波动比例, 33最高, 34最低, 38换手率, 43振幅
                         $realData2 = $this->getTodayChange2($code); //价格数据
@@ -274,36 +259,22 @@ class HelloController extends Controller
                             $model->amplitude = floatval($realData2[43]); //振幅
                         }
 
-//                         $shsz = $this->getShSz();
-//                         if (is_array($shsz)) {
-//                             $model->sh_num = Util::get($shsz, 1, 0); //上证指数
-//                             $model->sh_rate = Util::get($shsz, 2, 0); //上证比例
-//                             $model->sz_num = Util::get($shsz, 3, 0); //深证指数
-//                             $model->sz_rate = Util::get($shsz, 4, 0); //深证比例
-//                         }
+                        $shsz = $this->getShSz();
+                        if (is_array($shsz)) {
+                            $model->sh_num = Util::get($shsz, 1, 0); //上证指数
+                            $model->sh_rate = Util::get($shsz, 2, 0); //上证比例
+                            $model->sz_num = Util::get($shsz, 3, 0); //深证指数
+                            $model->sz_rate = Util::get($shsz, 4, 0); //深证比例
+                        }
 
                         $re = $model->save();
                         if ( ! $re) {
                         	var_dump($model->getErrors());die;
                         }
-                        //var_dump($re, $model->getFirstErrors());
-
-                        if (date('H:i:s') > '15:00:00') {
-                            //每日增减仓情况
-                            $recent = new GuRecent();
-                            $recent->code = $code;
-                            $recent->day = date('Y-m-d');
-                            $recent->final_zjc = floatval($zjc[3]);
-                            $recent->save();
-                        }
                     }
+
+                    echo count($data_) . '  success!' . PHP_EOL;
                 }
-
-                echo 'current time:' . $hms . PHP_EOL;
-            }
-
-            $left = $intervalTime - time() % 60;
-            sleep($left);
         }
     }
 
