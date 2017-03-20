@@ -628,8 +628,8 @@ class HelloController extends Controller
 
     //推荐数据,每天执行一次
     //yii hello/re
-    public function actionRe($limit1 = 30, $limit = 30, $downRate = 0, $addLeast = 100) {
-        $data = GuChange1::find()->select('code,z_j_c,rate')->orderBy('current_date_ desc, rate asc,z_j_c desc')->limit(GuFix::find()->count())->asArray()->all();
+    public function actionRe($limit1 = 30, $limit = 30, $downRate = 0, $addLeast = 500) {
+        $data = GuChange1::find()->select('code,z_j_c,rate')->orderBy('current_date_ desc,z_j_c desc,rate asc,')->limit(GuFix::find()->count())->asArray()->all();
         $i = 0;
         $overlap = [];
         foreach ($data as $change) {
