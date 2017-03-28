@@ -90,7 +90,7 @@ class HelloController extends Controller
                         }
 
                         $model = new GuFix();
-                        $model->code = $code;
+                        $model->code = $code . '';
                         if (StringHelper::startsWith($idStr, GuFix::TYPE_SH)) {
                             $model->type = GuFix::$types[GuFix::TYPE_SH];
                         } else {
