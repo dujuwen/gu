@@ -115,9 +115,11 @@ class GuEveryDay extends BaseGuEveryday {
                 $r5 = round($r5, 2);
             }
 
-            $re = GuFix::updateAll(['zjc_five_day' => $str, 'day1' => $t1, 'day3' => $t3, 'day5' => $t5, 'rate1' => $r1, 'rate3' => $r3, 'rate5' => $r5], 'code = ' . $code);
-            if ($re) {
-                echo '更新成功.' . PHP_EOL;
+            if ($code) {
+                $re = GuFix::updateAll(['zjc_five_day' => $str, 'day1' => $t1, 'day3' => $t3, 'day5' => $t5, 'rate1' => $r1, 'rate3' => $r3, 'rate5' => $r5], 'code = ' . $code);
+                if ($re) {
+                    echo '更新成功.' . PHP_EOL;
+                }
             }
         }
     }

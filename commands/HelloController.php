@@ -257,7 +257,7 @@ class HelloController extends Controller
 
                 //key 1名称, 2代码, 3当前价格, 4涨跌额, 5涨跌百分百, 6成交手数(手), 7成交额(万)
                 $realData = $this->getTodayChange($code); //成交数据
-                if (is_array($realData) && count($realData)) {
+                if (is_array($realData) && count($realData) && isset($realData[6]) && isset($realData[7])) {
                     $model->deal_count = floatval($realData[6]); //成交量(手)
                     $model->deal_num = floatval($realData[7]); //成交额(万)
                 }
