@@ -264,7 +264,7 @@ class HelloController extends Controller
 
                 //key 3当前价格, 4左收, 5今开, 31价格波动值, 32价格波动比例, 33最高, 34最低, 38换手率, 43振幅
                 $realData2 = $this->getTodayChange2($code); //价格数据
-                if (is_array($realData2) && count($realData2)) {
+                if (is_array($realData2) && count($realData2) && isset($realData2[43])) {
                     $model->current = floatval($realData2[3]); //当前价格
                     $model->yesterday = floatval($realData2[4]); //左收
                     $model->today = floatval($realData2[5]); //今开
