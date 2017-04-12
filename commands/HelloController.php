@@ -506,7 +506,8 @@ class HelloController extends Controller
                                     if (isset($all[3])) {
                                         $total .= "[{$all[3]}]";
                                     }
-                                    echo $td2 . '/'  . $total . '/' . $curPrice[5] . GuEveryDay::getChangeByCode($code) . PHP_EOL;
+                                    //echo $td2 . '/'  . $total . '/' . $curPrice[5] . GuEveryDay::getChangeByCode($code) . PHP_EOL;
+                                    echo $td2 . '/'  . $total . '/' . $curPrice[5] . PHP_EOL;
                                 }
                             }
                         }
